@@ -1,0 +1,1130 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#22292f">
+    <meta name="theme-color" content="#22292f" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#22292f" media="(prefers-color-scheme: dark)">
+    <title>Lifts - Whistler Peak Weather Site - Whistler Blackcomb, BC, Canada</title>
+    <meta name="description" content="Lift Status - whistlerpeak.com - Weather and Snow Conditions for Whistler Blackcomb">
+    <meta name="keywords" content="whistler,blackcomb,mountains,webcams,weather,ski,snowboarding,snow,report,conditions,canada">
+    <meta http-equiv="Cache-control" content="public">
+    <!-- <meta property=og:image content="http://m.whistlerpeak.com/img/facebook-img.jpg" /> -->
+
+    <link rel="apple-touch-icon" sizes="57x57" href="./apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="./apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="./apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="./apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="./ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../nav/css-nav.css?KAmJidCrX2">
+    <link rel="stylesheet" href="../nav/css-lifts.php?KAmJidCrX2">
+    <link rel="stylesheet" href="css-lifts.css?KAmJidCrX2">
+    <!-- Add to your page's <head> section -->
+    <link rel="stylesheet" href="https://whistlerpeak.com/cams/dist/photoswipe.css?{$random_string}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <header>
+        
+<!-- Add Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<h1 class="logo">whistler peak</h1>
+
+<a href="https://whistlerpeak.com" class="header-home-icon animate-in">
+    <span class="material-icons">home</span>
+</a>
+
+<nav>
+    <ul>
+        <li class="desktop"><a href="https://whistlerpeak.com/cams/">Cams</a></li>
+        <li class="desktop"><a href="https://whistlerpeak.com/forecast/">Forecast</a></li>
+        <li class="desktop"><a href="https://whistlerpeak.com/livelifts/">Lifts</a></li>
+        <li class="desktop"><a href="https://whistlerpeak.com/grooming/">Runs</a></li>
+        <li class="desktop"><a href="https://whistlerpeak.com/temps/">Temps</a></li>
+        &lt;<li class="desktop"><a href="https://whistlerpeak.com/bike/">Bike</a></li>
+        <!-- <li class='desktop'><a href='https://whistlerpeak.com/video/'>Bike</a></li> -->
+    </ul>
+</nav>
+
+<style>
+.header-home-icon {
+    position: fixed;
+    top: 22px;
+    right: 73px;
+    z-index: 1000;
+    color: var(--color-light-secondary);
+    text-decoration: none;
+    font-size: 1.2em;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    touch-action: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Spin animation with color transition */
+@keyframes spinIn {
+    0% {
+        transform: rotate(-180deg);
+        opacity: 0;
+        color: var(--color-brand);
+    }
+
+    50% {
+        transform: rotate(-90deg);
+        opacity: 0.4;
+        color: var(--color-brand);
+    }
+
+    100% {
+        transform: rotate(0);
+        opacity: 0.8;
+        color: var(--color-light-secondary);
+    }
+}
+
+.animate-in {
+    animation: spinIn 0.6s ease-out forwards;
+}
+
+.header-home-icon:hover {
+    color: var(--color-brand);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+@media screen and (min-width: 1300px) {
+    .header-home-icon {
+        /*         display: none; */
+    }
+}
+</style>
+
+<input type="checkbox" name="navToggle" class="openSidebarMenu" id="openSidebarMenu">
+<label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+</label>
+
+
+<div id="sidebarMenu">
+    <ul class="sidebarMenuInner small" style="gap: 0.33em;">
+        <li id="support" style="padding: 1em;">About<span>This Project</span></li>
+        <!-- <li id="backcountry">Backcountry<span>Report</span></li> -->
+        <li id="bike" style="padding: 1em;">Bike<span>Park</span></li>
+        <li id="roads" style="padding: 1em;">Cams<span>highway</span></li>
+        <li id="cams" style="padding: 1em;">Cams<span>mountain</span></li>
+        <li id="weather" style="padding: 1em;">Forecast<span>1400m•SF</span></li>
+        <li id="forecast" style="padding: 1em;">Forecast<span>1800m•RWDI</span></li>
+        <li id="favs" style="padding: 1em;">Grooming<span>Favorites</span></li>
+        <li id="grooming" style="padding: 1em;">Grooming<span>Reports</span></li>
+        <!-- <li id="elevations">Lift<span>Elevations</span></li> -->
+        <li id="open" style="padding: 1em;">Lift<span>History</span></li>
+        <li id="lifts" style="padding: 1em;">Lift<span>Status</span></li>
+
+        <li id="ruler-story" style="padding: 1em;">Snow<span>Ruler</span></li>
+        <li id="temps" style="padding: 1em;">Temps<span>live</span></li>
+        <li id="video" style="padding: 1em;">Video<span>Streams</span></li>
+        <li id="winds" style="padding: 1em;">Wind<span>Charts</span></li>
+    </ul>
+
+    
+    <ul class="sidebarMenuInner large" style="gap: 0.33em;">
+        <li id="support" style="padding: 1em;">About<span>This Project</span></li>
+        <!-- <li id="backcountry">Backcountry<span>Report</span></li> -->
+        <li id="bike" style="padding: 1em;">Bike<span>Park</span></li>
+        <li id="roads" style="padding: 1em;">Cams<span>Highway</span></li>
+        <li id="cams" style="padding: 1em;">Cams<span>Mountain</span></li>
+        <li id="weather" style="padding: 1em;">Forecast<span>1400m•SF</span></li>
+        <li id="forecast" style="padding: 1em;">Forecast<span>1800m•RWDI</span></li>
+        <li id="weather-top" style="padding: 1em;">Forecast<span>2248m•SF</span></li>
+        <li id="valley" style="padding: 1em;">Forecast<span>Valley</span></li>
+        <li id="favs" style="padding: 1em;">Grooming<span>Favorites</span></li>
+        <li id="grooming" style="padding: 1em;">Grooming<span>Reports</span></li>
+        <li id="elevations" style="padding: 1em;">Lift<span>Elevations</span></li>
+        <li id="open" style="padding: 1em;">Lift<span>History</span></li>
+        <li id="lifts" style="padding: 1em;">Lift<span>Status</span></li>
+        <li id="wait-times" style="padding: 1em;">Lift<span>Wait Times</span></li>
+        <li id="lift-updates" style="padding: 1em;">Lift<span>Updates</span></li>
+        <li id="events" style="padding: 1em;">Mountain<span>Info</span></li>
+        <li id="snow_history" style="padding: 1em;">Snow<span>History</span></li>
+        <li id="snow" style="padding: 1em;">Snow<span>Report</span></li>
+        <li id="ruler-story-large" style="padding: 1em;">Snow<span>Ruler</span></li>
+        <li id="ruler-calendar" style="padding: 1em;">Snow<span>Ruler Calendar</span></li>
+        <li id="temps-history" style="padding: 1em;">Temps<span>History</span></li>
+        <li id="temps" style="padding: 1em;">Temps<span>Live</span></li>
+        <li id="updates" style="padding: 1em;">Updates<span>#WBOPS</span></li>
+        <li id="video_large" style="padding: 1em;">Video<span>Streams</span></li>
+        <!-- <li id="yeti">Yeti<span>Catch-the-Yeti</span></li> -->
+        <li id="winds" style="padding: 1em;">Wind<span>Charts</span></li>
+        <li id="external_zone_history_large" style="padding: 1em;">Zone<span>History</span></li>
+    </ul>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    const original = window.getComputedStyle(document.documentElement).fontSize;
+    const number = parseFloat(original, 10);
+    const unit = original.replace(/(\d*.\d+)|\d+/, '');
+    const defaultFontSizeLarge = (number * 0.6) + unit;
+    const defaultFontSizeMedium = (number * 0.7) + unit;
+    const defaultFontSizeSmall = (number * 0.8) + unit;
+
+    if (number >= 22) {
+        $('body, footer').css('font-size', defaultFontSizeLarge);
+        $('h1').css('font-size', '1.2rem');
+    }
+
+    if (number > 20 && number <= 21) {
+        $('body, footer').css('font-size', defaultFontSizeLarge);
+        $('h1').css('font-size', '1.3rem');
+    }
+    if (number == 20) {
+        $('body, footer').css('font-size', defaultFontSizeMedium);
+        $('h1').css('font-size', '1.4rem');
+    }
+    if (number >= 18 && number < 20) {
+        $('body, footer').css('font-size', defaultFontSizeSmall);
+        $('h1').css('font-size', '1.5rem');
+    }
+    // $('h1').text(number);
+    // console.log(number);
+
+    function viewport() {
+        var e = window,
+            a = "inner";
+        if (!("innerWidth" in window)) {
+            a = "client";
+            e = document.documentElement || document.body;
+        }
+        return {
+            width: e[a + "Width"],
+            height: e[a + "Height"],
+        };
+    }
+
+    let deviceHeight = viewport().height;
+    let deviceWidth = viewport().width;
+
+    // $('h1').text(deviceHeight);
+    // $('h1').append(viewport().width);
+
+    if (deviceHeight <= 555) {
+        // 548 - iPhone SE, iPhone 8
+        // 553 - iPhone 6S
+        $("ul.sidebarMenuInner").css("grid-gap", "0.125em");
+        // $(".sidebarMenuInner li").css("font-size", "1.0em");
+    } else if (deviceHeight <= 630) {
+        // 617 - iPhone 8 Plus
+        // 629 - iPhone 12 Mini
+        $("ul.sidebarMenuInner").css("grid-gap", "0.33em");
+        $(".sidebarMenuInner li").css("padding", "1em");
+
+    } else if (deviceHeight <= 700) {
+        // 635 - iPhone X
+        // 649 - Galaxy 22, 22 Ultra
+        // 663 - Android basic    
+        // 664 - iPhone 14
+        // 674 - OnePlus 7
+
+        $("ul.sidebarMenuInner").css("grid-gap", "0.5em");
+        $(".sidebarMenuInner li").css("padding", "1em");
+    } else if (deviceHeight == 746) {
+        // 746 - iPad
+        $("ul.sidebarMenuInner").css("grid-gap", "0.5em");
+        $(".sidebarMenuInner li").css("padding", "1em");
+
+    } else if (deviceHeight <= 760) {
+        // 702 - Galaxy 22+
+        // 713 - OnePlus 9
+        // 715 - iPhone XR
+        // 740 - iPhone 14 Pro Max
+        // 746 - iPhone 14 Plus
+        // 760 - Xiaomi 
+        $("ul.sidebarMenuInner").css("grid-gap", "0.5em");
+        $(".sidebarMenuInner li").css("padding", "1.25em");
+    } else if (deviceHeight <= 777) {
+        // 775 - Pixel 7 Pro            
+        $("ul.sidebarMenuInner").css("grid-gap", "0.5em");
+        $(".sidebarMenuInner li").css("padding", "1.25em");
+    } else {
+        // 783 - Poco
+        // 790 - Pixel 7
+        $("ul.sidebarMenuInner").css("grid-gap", "0.5em");
+        $(".sidebarMenuInner li").css("padding", "1.5em");
+    }
+
+    function openPage(value, site) {
+        if (site == "wp") {
+            const prefix = "https://whistlerpeak.com/" + value + "/";
+            window.open(prefix, '_self');
+        }
+        if (site == "graphs_home") {
+            const prefix = "https://whistlercharts.com/";
+            window.open(prefix, '_self');
+        }
+
+        if (site == "runs_home") {
+            const prefix = "https://whistlerruns.com/";
+            window.open(prefix, '_self');
+        }
+
+        if (site == "runs") {
+            const prefix = "https://whistlerruns.com/grooming/";
+            window.open(prefix, '_self');
+        }
+        if (site == "runs_history") {
+            const prefix = "https://whistlerruns.com/history/";
+            window.open(prefix, '_self');
+        }
+        if (site == "lifts_home") {
+            const prefix = "https://whistlerpeak.com/livelifts/";
+            window.open(prefix, '_self');
+        }
+
+        if (site == "lifts_blackcomb") {
+            const prefix = "https://whistlerlifts.com/blackcomb";
+            window.open(prefix, '_self');
+        }
+        if (site == "lifts_whistler") {
+            const prefix = "https://whistlerlifts.com/whistler";
+            window.open(prefix, '_self');
+        }
+
+        if (site == "open_runs") {
+            const prefix = "https://whistlerruns.com/epicmix/open";
+            window.open(prefix, '_self');
+        }
+
+        if (site == "lifts") {
+            const prefix = "https://whistlerlifts.com/";
+            window.open(prefix, '_self');
+        }
+        if (site == "open_home") {
+            const prefix = "https://whistlerpeak.com/lift-history/";
+            window.open(prefix, '_self');
+        }
+        if (site == "open") {
+            const prefix = "https://whistlerpeak.com/lift-history/";
+            window.open(prefix, '_self');
+        }
+
+    }
+
+
+    $("#all, #all-large").click(function() {
+        const prefix = "/all/";
+        window.open(prefix, '_self');
+    });
+
+    $("#home, #home-large").click(function() {
+        const prefix = "/";
+        window.open(prefix, '_self');
+    });
+
+    $("#grooming, #weather-top, #favs, #wait-times, #winds, #hike, #updates, #elevations, #lift-updates,#tempslist, #bike, #fatmap, #winds, #support, #cams, #snow, #choose, #forecast, #temps, #food, #valley, #donate, #backcountry, #maps, #weather, #temps-history, #roads, #temps-history")
+        .click(function() {
+            const clickedId = $(this).attr("id");
+            const site = "wp";
+            openPage(clickedId, site);
+        });
+
+    $("#graphs, #graphs-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "graphs_home";
+        openPage(clickedId, site);
+    });
+    $("#runs, #runs-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "runs";
+        openPage(clickedId, site);
+    });
+    $("#history-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "runs_home";
+        openPage(clickedId, site);
+    });
+
+    $("#video, #video_large").click(function() {
+        window.open('https://whistlerpeak.com/video/', '_self');
+    });
+
+    $("#events").click(function() {
+        window.open('https://whistlerpeak.com/snow/events/', '_self');
+    });
+
+    $("#ruler").click(function() {
+        window.open('https://whistlerpeak.com/snow/ruler/', '_self');
+    });
+
+    $("#ruler-story, #ruler-story-large").click(function() {
+        window.open('https://whistlerpeak.com/snow/story/', '_self');
+    });
+
+
+    $("#ruler-calendar").click(function() {
+        window.open('https://whistlerpeak.com/snow/calendar/', '_self');
+    });
+
+    $("#snowfall_history").click(function() {
+        window.open('https://whistlerpeak.com/snow/history', '_self');
+    });
+
+    $("#forecast_landing, #forecast_landing_large").click(function() {
+        window.open('https://whistlerpeak.com/choose', '_self');
+    });
+
+    $("#snow_history").click(function() {
+        window.open('https://whistlerpeak.com/snow/history', '_self');
+    });
+
+    $("#runs_history").click(function() {
+        window.open('https://whistlerruns.com/history', '_self');
+    });
+
+
+    $("#external_zone_history").click(function() {
+        window.open('https://whistlerlifts.com/zone-history', '_self');
+    });
+
+    $("#external_zone_history_large").click(function() {
+        window.open('https://whistlerlifts.com/zone-history', '_self');
+    });
+
+
+    $("#lifts, #lifts-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "lifts_home";
+        openPage(clickedId, site);
+    });
+
+    $("#lifts-blackcomb").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "lifts_blackcomb";
+        openPage(clickedId, site);
+    });
+
+    $("#open_runs, #open_runs-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "open_runs";
+        openPage(clickedId, site);
+    });
+
+
+    $("#lifts-whistler").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "lifts_whistler";
+        openPage(clickedId, site);
+    });
+
+    $("#open, #open-large").click(function() {
+        const clickedId = $(this).attr("id");
+        const site = "open_home";
+        openPage(clickedId, site);
+    });
+    $("#zones, #zones_large").click(function() {
+        window.open('https://whistlerlifts.com/zones/', '_self');
+    });
+
+
+
+
+    var $checkboxes = $('input[name="navToggle"]');
+    $checkboxes.change(function() {
+        $('main section:nth-child(1), footer').toggle();
+        var checked = $(this).prop('checked');
+        if (checked) {
+            $('.spinner').css('background-color', 'var(--color-brand)');
+        } else {
+            $('.spinner').css('background-color', 'var(--color-light-secondary)');
+        }
+    })
+
+    $(".logo").click(function() {
+        document.location = "https://whistlerpeak.com/";
+    });
+
+    $(".icon-mtn").click(function() {
+        document.location = "https://whistlerpeak.com/";
+    });
+
+});
+</script>    </header>
+
+        <main>
+        <section>
+            <div id="notice_lifts" style="display: none;">Loading...</div>
+            <div id="content_lifts" style="">
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+
+        <div id="notice_live_lifts" style="display: none;">Loading..</div>
+    <div id="content_live_lifts">
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whistler Peak</title>
+
+
+
+
+       
+
+   
+
+
+
+
+    <div class="switch-container">
+        <div class="slider-heading">Lift Status<br><span id="mountainLabel">Whistler</span></div>
+        <div class="switchesTop">
+            <span class="slider-text">mountain: </span>
+            <label class="switch">
+                <input class="topSwitch" type="checkbox" name="status">
+                <span class="slider topSlider"></span>
+            </label>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="liftWrapper" id="allLifts">
+
+    
+<div class="filterBar">
+<div class="fitlerText">Filter:</div>
+<div class="filterOpen"></div>
+<div class="filterHold"></div>
+<div class="filterClosed"></div>
+
+<div class="filterAll active"></div>
+</div>
+
+<div class="whistler" style="">
+            <div class="lift-container openContainer test3">
+                <div class="liftName openName"><div>Creekside Gondola</div>
+                </div>
+                
+                <div class="liftWaitContainer"><div class="noLight"></div><div class="noLight"></div><div class="greenLight"></div></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Whistler Gondola Lower</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container openContainer test3">
+                <div class="liftName openName"><div>Fitzsimmons Express</div>
+                </div>
+                
+                <div class="liftWaitContainer"><div class="noLight"></div><div class="noLight"></div><div class="greenLight"></div></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Whistler Gondola Upper</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container openContainer test3">
+                <div class="liftName openName"><div>Garbanzo Express</div>
+                </div>
+                
+                <div class="liftWaitContainer"><div class="noLight"></div><div class="noLight"></div><div class="greenLight"></div></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Olympic Chair</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Big Red Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Franz's Chair</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Emerald 6 Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">P2P Gondola</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Harmony 6 Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Peak Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Symphony Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">T-bars</div>
+                <div class="liftWait"></div>
+            </div>
+            </div><div class="blackcomb" style="display: none;">
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Excalibur Gondola Lower</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Blackcomb Gondola Lower</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Magic Chair</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Excalibur Gondola Upper</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Excelerator Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Blackcomb Gondola Upper</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Catskinner Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Jersey Cream Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Crystal Ridge Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">P2P Gondola</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Glacier Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">7th Heaven Express</div>
+                <div class="liftWait"></div>
+            </div>
+            
+            <div class="lift-container closedContainer test2">
+                <div class="liftName closedName">Showcase T-bar</div>
+                <div class="liftWait"></div>
+            </div>
+            </div>
+        </div>    
+        
+
+    <!-- In your main lifts page -->
+    <div id="webcams-section">
+        <div class="thumbnail-container pswp-gallery" id="lifts-cam-gallery"><ul class="thumbnail-list">
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://player.brownrice.com/snapshot/whistlervillagefitz.jpg?ysYhvnV7" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Fitzsimmons Live">
+              <img class="thumbnail-image" loading="lazy" src="https://player.brownrice.com/snapshot/whistlervillagefitz.jpg?t=1753403538275" alt="Fitzsimmons Live">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://whistlerpeak.com/wx_img/c1_L.jpg?tx2LET49" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Creeside Gondola">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/c1_L.jpg?t=1753403538275" alt="Creeside Gondola">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://whistlerpeak.com/wx_img/d1_L.jpg?bK7l1jQq" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Sundial Hotel">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/d1_L.jpg?t=1753403538275" alt="Sundial Hotel">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://whistlerpeak.com/wx_img/w1_L.jpg?OYe5tGHV" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Roundhouse One">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/w1_L.jpg?t=1753403538275" alt="Roundhouse One">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://whistlerpeak.com/wx_img/w2_L.jpg?2vCbiOHS" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Roundhouse Two">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/w2_L.jpg?t=1753403538275" alt="Roundhouse Two">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item whistler" style=""><span>
+            <a href="https://player.brownrice.com/snapshot/whistlerpeak.jpg?dMT0oXFr" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Whistler Peak Live">
+              <img class="thumbnail-image" loading="lazy" src="https://player.brownrice.com/snapshot/whistlerpeak.jpg?t=1753403538275" alt="Whistler Peak Live">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://player.brownrice.com/snapshot/whistlervillage.jpg?sySKl4zo" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Upper Village Live">
+              <img class="thumbnail-image" loading="lazy" src="https://player.brownrice.com/snapshot/whistlervillage.jpg?t=1753403538275" alt="Upper Village Live">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://whistlerpeak.com/wx_img/d1_L.jpg?ko0bHwlg" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Sundial Hotel">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/d1_L.jpg?t=1753403538275" alt="Sundial Hotel">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://whistlerpeak.com/wx_img/b1_L.jpg?HyBupPzT" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Rendezvous One">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/b1_L.jpg?t=1753403538275" alt="Rendezvous One">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://whistlerpeak.com/wx_img/b2_L.jpg?2KQ0Fzfx" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Rendezvous Two">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/b2_L.jpg?t=1753403538275" alt="Rendezvous Two">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://whistlerpeak.com/wx_img/g1_L.jpg?hi8C1JIV" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Glacier Express One">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/g1_L.jpg?t=1753403538275" alt="Glacier Express One">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://whistlerpeak.com/wx_img/g2_L.jpg?7m1oH2e5" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Glacier Express Two">
+              <img class="thumbnail-image" loading="lazy" src="https://whistlerpeak.com/wx_img/g2_L.jpg?t=1753403538275" alt="Glacier Express Two">
+            </a>
+            </span></li>
+        
+            <li class="webcam-item blackcomb" style="display: none;"><span>
+            <a href="https://player.brownrice.com/snapshot/whistler7thheaven.jpg?1ZnJU52a" data-pswp-width="1920" data-pswp-height="1080" target="_blank" data-camera-name="Seven Heaven Live">
+              <img class="thumbnail-image" loading="lazy" src="https://player.brownrice.com/snapshot/whistler7thheaven.jpg?t=1753403538275" alt="Seven Heaven Live">
+            </a>
+            </span></li>
+        </ul></div>
+        <script type="module">
+            import PhotoSwipeLightbox from 'https://whistlerpeak.com/cams/dist/photoswipe-lightbox.esm.js';
+            import PhotoSwipe from 'https://whistlerpeak.com/cams/dist/photoswipe.esm.js';
+            
+            const lightbox = new PhotoSwipeLightbox({
+                gallery: '#lifts-cam-gallery', // Changed to match new gallery ID
+                children: 'a',
+                pswpModule: PhotoSwipe
+            });
+
+            let messageElement = null;
+            let captionElement = null;
+
+            // Create and update the camera name display and add static caption
+            lightbox.on('afterInit', () => {
+                const counter = document.querySelector('.pswp__counter');
+                if (counter) {
+                    messageElement = document.createElement('div');
+                    messageElement.className = 'pswp__zoom-level-indicator';
+                    messageElement.style.cssText = 'display: inline-block; color: #fff; margin-left: 10px; font-size: 13px; font-weight: bold;';
+                    counter.insertAdjacentElement('afterend', messageElement);
+                    updateCameraName();
+                }
+
+                // Add static caption
+                const pswpElement = document.querySelector('.pswp');
+                if (pswpElement) {
+                    captionElement = document.createElement('div');
+                    captionElement.className = 'pswp__static-caption';
+                    captionElement.textContent = 'Swipe ↑ to close, ← and → for other images';
+                    captionElement.style.cssText = `
+                        position: absolute;
+                        bottom: 16px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        color: #fff;
+                        font-size: 14px;
+                        text-align: center;
+                        padding: 8px 16px;
+                        background: rgba(0, 0, 0, 0.5);
+                        border-radius: 20px;
+                        z-index: 1;
+                        pointer-events: none;
+                    `;
+                    pswpElement.appendChild(captionElement);
+                }
+            });
+
+            // Update camera name when changing slides
+            lightbox.on('change', updateCameraName);
+
+            function updateCameraName() {
+                if (!messageElement || !lightbox.pswp || !lightbox.pswp.currSlide) return;
+
+                const element = lightbox.pswp.currSlide.data.element;
+                const img = element.querySelector('img');
+                
+                if (img && img.alt) {
+                    messageElement.textContent = img.alt;
+                } else {
+                    const name = element.getAttribute('data-camera-name');
+                    messageElement.textContent = name || '';
+                }
+            }
+
+            lightbox.init();
+            
+            // Refresh images every 5 minutes
+            function refreshGalleryImages() {
+                console.log('Refreshing gallery images at:', new Date().toLocaleTimeString());
+                const gallery = document.querySelector('#lifts-cam-gallery');
+                if (!gallery) {
+                    console.log('Gallery not found');
+                    return;
+                }
+                
+                const images = gallery.querySelectorAll('img');
+                console.log('Found', images.length, 'images to refresh');
+                
+                images.forEach((img, index) => {
+                    const originalSrc = img.src;
+                    const newSrc = originalSrc.split('?')[0] + '?t=' + new Date().getTime();
+                    
+                    const tempImage = new Image();
+                    tempImage.onload = function() {
+                        img.src = newSrc;
+                        console.log('Updated image', index + 1, '/', images.length, '-', img.alt);
+                    };
+                    tempImage.onerror = function() {
+                        console.error('Failed to load image:', newSrc);
+                    };
+                    tempImage.src = newSrc;
+                });
+            }
+            
+            // Initial refresh
+            console.log('Starting gallery refresh cycle');
+            refreshGalleryImages();
+            
+            // Set interval to 5 minutes (300000 milliseconds)
+            setInterval(refreshGalleryImages, 300000);
+        </script>
+            </div>
+
+    <style>
+    /* Add these styles to handle show/hide */
+    .webcam-item {
+        display: none;
+        /* Hide all by default */
+    }
+
+    /* Show when parent has appropriate class */
+    .show-whistler .webcam-item.whistler,
+    .show-blackcomb .webcam-item.blackcomb {
+        display: block;
+    }
+    </style>
+
+    <script>
+    // Add this to your existing mountain toggle logic
+    function updateWebcamVisibility(mountain) {
+        const container = document.querySelector('.thumbnail-container');
+        container.classList.remove('show-whistler', 'show-blackcomb');
+        container.classList.add(`show-${mountain}`);
+    }
+
+    // Call this when mountain selection changes
+    // updateWebcamVisibility('whistler'); // or 'blackcomb'
+    </script>
+
+
+
+    <div class="buttonWrapper">
+        <div class="button-large" id="historyLink">Lift History</div>
+        <div class="button-large" id="zonesLink">Zones</div>
+    </div>
+    <div class="tipFlex" style="margin-top: 1em;" id="tip_mountain"><span><i>Tip:</i></span> <span>Use the mountain
+            toggle at the top to change mountains.</span></div>
+
+    <script>
+    $(document).ready(function() {
+
+
+
+        function readStorage() {
+            let likesMountain = window.localStorage.getItem('mountain');
+            if (likesMountain === null) {
+                window.localStorage.setItem('mountain', 'blackcomb');
+                // changeMountain();
+                $('.whistler').hide();
+            }
+            if (likesMountain == "blackcomb") {
+                $('.blackcomb').show();
+                $('.whistler').hide();
+                $('#mountainLabel').text('Blackcomb');
+                // $('#mountainButton').text('Blackcomb lifts');
+                $(".topSwitch").prop('checked', false);
+                // $('.left-button').addClass('notActive');
+                // updateLiveliftsBlackcomb();
+            } else {
+                // updateLiveliftsWhistler();
+                $('.whistler').show();
+                $('.blackcomb').hide();
+                $('#mountainLabel').text('Whistler');
+                // $('#mountainButton').text('Whistler lifts');
+                $(".topSwitch").prop('checked', true);
+                // $('.left-button').addClass('notActive');
+            }
+        }
+
+        readStorage();
+
+
+        function checktipMountain() {
+            let tipMountain = window.localStorage.getItem('tipMountain');
+            if (tipMountain == "performed") {
+                $('#tip_mountain').hide();
+            } else {
+                $('#tip_mountain').show();
+            }
+        }
+        checktipMountain();
+
+        function changeMountain() {
+            let likesMountain = window.localStorage.getItem('mountain');
+            if (likesMountain == "whistler") {
+                window.localStorage.setItem('mountain', 'blackcomb');
+                readStorage();
+            } else {
+                window.localStorage.setItem('mountain', 'whistler');
+                readStorage();
+            }
+        }
+
+        $(".topSwitch").change(function() {
+            window.localStorage.setItem('tipMountain', 'performed');
+            $('#tip_mountain').hide();
+            changeMountain();
+        });
+
+        $(".filterAll").click(function() {
+            $(".openContainer, .holdContainer, .closedContainer").show();
+            $(".filterOpen, .filterHold, .filterClosed").removeClass('active');
+            $(this).addClass('active');
+        });
+
+
+        $(".filterClosed").click(function() {
+            $(".openContainer, .holdContainer").hide();
+            $(".closedContainer").show();
+            $(".filterOpen, .filterHold, .filterAll").removeClass('active');
+            $(this).addClass('active');
+        });
+
+
+        $(".filterOpen").click(function() {
+            $(".closedContainer, .holdContainer").hide();
+            $(".openContainer").show();
+            $(".filterClosed, .filterHold, .filterAll").removeClass('active');
+            $(this).addClass('active');
+        });
+
+
+        $(".filterHold").click(function() {
+            $(".closedContainer, .openContainer").hide();
+            $(".holdContainer").show();
+            $(".filterOpen, .filterClosed, .filterAll").removeClass('active');
+            $(this).addClass('active');
+        });
+
+        $(".messageText, .messageStamp").click(function() {
+            window.open("https://twitter.com/wbmtnops", '_blank');
+        });
+
+
+
+        $(".thumbnail-list img").click(function() {
+            $("#weather-modal").css("display", "grid");
+            $(".modal-content").attr("src", this.src);
+            /*
+                        const scrollY = document.documentElement.style.getPropertyValue("--scroll-y");
+                        const body = document.body;
+                        body.style.position = "fixed";
+                        body.style.top = `-${scrollY}`;
+            */
+        });
+
+        $(".modal-content, #weather-modal").click(function() {
+            $("#weather-modal").css("display", "none");
+            /*
+                        const body = document.body;
+                        const scrollY = body.style.top;
+                        body.style.position = "";
+                        body.style.top = "";
+                        window.scrollTo(0, parseInt(scrollY || "0") * -1);
+            */
+        });
+
+
+        $("#zonesLink").click(function() {
+            window.open("zones/", '_self');
+        });
+
+        $("#historyLink").click(function() {
+            window.open("https://whistleropen.com/", '_self');
+        });
+
+
+    });
+    </script>
+
+
+
+
+</div>
+
+
+    <script type="text/javascript">
+    function updateLive() {
+
+        // $("#content_live_lifts").hide();
+        // $("#notice_live_lifts").show();
+        // $("#notice_live_lifts").html("<p class='live_message' style='margin-left: 0.25em;'>Updating lift data...</p>");
+        $.ajax({
+            type: "GET",
+            // url: "snow-block-snow-grid-new.php",
+            url: "block-live-lifts.php",
+            timeout: 20000,
+            success: function(data) {
+                $("#notice_live_lifts").hide();
+                // window.scrollTo({ top: 0, behavior: 'smooth' });
+                $("#content_live_lifts").html(data);
+                $("#content_live_lifts").show();
+                window.setTimeout(() => {
+                    updateLive();
+                }, 60000); // 2m setInterval
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $("#notice_live_lifts").html("Timeout contacting server..");
+                window.setTimeout(updateLive, 100000);
+            },
+        });
+    }
+
+
+
+    $(document).ready(function() {
+        updateLive(); // Snow
+        if (navigator.userAgent.indexOf('gonative') > -1 || navigator.userAgent.indexOf('median') > -1) {
+            window.location.href = 'gonative://tabs/select/4';
+
+        }
+
+    });
+    </script>
+
+
+
+
+</div>
+        </section>
+    </main>
+    <footer>
+        <div class="icon-mtn"></div>
+<div>Copyright © 2025 <a href="https://whistlerpeak.com/" data-reveal-id="easter">whistlerpeak.com</a></div>
+<div class="all-links"><a href="https://whistlerpeak.com/support/">Help support this project</a></div>    </footer>
+
+    <script type="text/javascript">
+    function updateLivelifts() {
+        $("#content_lifts").hide();
+        $("#notice_lifts").show();
+        $("#notice_lifts").html("Loading...");
+        $.ajax({
+            type: "GET",
+            url: "lifts_main.php",
+            timeout: 20000,
+            success: function(data) {
+                $("#notice_lifts").hide();
+                $("#content_lifts").show();
+                $("#content_lifts").html(data);
+                window.setTimeout(() => {
+                    updateLivelifts();
+                }, 3600000); // 1hr setInterval
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $("#notice_lifts").html("Timeout contacting server..");
+                window.setTimeout(updateLivelifts, 100000);
+            },
+        });
+    }
+
+    $(document).ready(function() {
+        updateLivelifts(); // Live lifts
+        if (navigator.userAgent.indexOf('gonative') > -1 || navigator.userAgent.indexOf('median') > -1) {
+            window.location.href = 'gonative://tabs/select/4';
+
+        }
+    });
+    </script>
+
+
+
+</body></html>

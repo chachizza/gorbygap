@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: gorby-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CACHE_DURATION_MINUTES
+        value: 7
+      - key: SCRAPING_TIMEOUT_MS
+        value: 30000
+      - key: LOG_LEVEL
+        value: info 

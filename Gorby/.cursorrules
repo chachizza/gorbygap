@@ -1,0 +1,97 @@
+
+## 📘 Project Rules & Guidelines
+
+This document outlines key rules, design principles, coding practices, and documentation requirements for building and maintaining this app. It should be treated as the single source of truth for how work is done in this project.
+
+---
+
+### 🎨 Design Consistency
+
+* **Use the established color palette** across all new pages and features. Do not introduce new colors unless absolutely necessary, and document the reasoning in `README.md`.
+* **Follow the visual style** of existing UI components (padding, border radius, font sizes, layout spacing, etc).
+* **No mixing of styles or frameworks** without prior discussion.
+* Any new UI pages or components **must match the app’s existing design language** to maintain a cohesive visual experience.
+
+---
+
+### ⚙️ Development Rules
+
+* **Absolutely no mock data** is to be used in production or during development unless toggled explicitly via a dev flag. This is a real-time weather app and must show live, accurate data at all times.
+* **All code must be double-checked** for reliability, stability, and integration with live data sources.
+* Perform **manual checks** to confirm that data is properly retrieved, parsed, and displayed in the app.
+* Avoid untracked or throwaway scripts. **All code should be committed with meaningful commit messages**.
+
+---
+
+### 🛠️ Documentation Standards
+
+* **Keep `README.md` up to date** with:
+
+  * Major changes to project structure
+  * APIs integrated (with brief setup steps or links to `docs/`)
+  * Any changes to the build process, dependencies, or configurations
+* Use the `/docs` directory to store:
+
+  * API integration steps (e.g., WeatherKit, Instagram, etc.)
+  * Keys, tokens, or secrets (obfuscated, never in plaintext)
+  * Credentials and permissions requirements
+  * App Store setup processes, provisioning profiles, entitlements, etc.
+
+---
+
+### 🔐 Secrets & Integration
+
+* Maintain a separate `secrets.md` or `.env` (gitignored) file containing all:
+
+  * API keys
+  * Access tokens
+  * App secrets
+  * Setup instructions for each environment (local/dev/prod)
+* Document how these secrets were obtained and how to rotate or refresh them if needed.
+
+---
+
+### 📓 Integration Logs
+
+All major processes should be logged in `/docs/integration-log.md`. This includes:
+
+* ✅ **WeatherKit Access**
+
+  * Steps to sign up
+  * Provisioning profile setup
+  * Required entitlements
+  * Keys and capabilities setup in Apple Developer Account
+
+* ✅ **Instagram Integration**
+
+  * App registration
+  * Access token flow (short vs long-lived tokens)
+  * Setting permissions in Meta Developer Dashboard
+  * Notes on how frequently the feed updates and handling of expired tokens
+
+* ✅ **Other Third-Party Integrations**
+
+  * Document the **“why”**, the **“how”**, and any issues faced.
+
+---
+
+### 🗂️ Folder Structure
+
+If a new folder or architecture style is introduced:
+
+* Explain the structure briefly in `README.md`
+* Justify its purpose and how it fits into the overall app design
+
+---
+
+Keep `integration-log.md` up to date with major edits. 
+
+---
+
+### ✅ Final Notes
+
+* **Always verify live data is working before committing.**
+* **Be obsessive about consistency — both in code and UI.**
+* **If it’s important, document it. If it’s undocumented, it’s temporary.**
+
+---
