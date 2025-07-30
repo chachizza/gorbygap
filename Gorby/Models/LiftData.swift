@@ -66,8 +66,6 @@ struct LiftData: Codable, Identifiable {
 extension LiftData {
     static let mockLifts: [LiftData] = [
         LiftData(liftName: "Peak Express", status: "Open", mountain: "Whistler", type: "Express Chair", lastUpdated: "2025-01-24T15:30:00Z"),
-        LiftData(liftName: "Harmony Express", status: "Closed", mountain: "Whistler", type: "Express Chair", lastUpdated: "2025-01-24T15:30:00Z"),
-        LiftData(liftName: "Blackcomb Gondola", status: "Open", mountain: "Blackcomb", type: "Gondola", lastUpdated: "2025-01-24T15:30:00Z"),
-        LiftData(liftName: "Peak 2 Peak Gondola", status: "Closed", mountain: "Both", type: "Gondola", lastUpdated: "2025-01-24T15:30:00Z")
+        LiftData(liftName: "Blackcomb Gondola", status: "Open", mountain: "Blackcomb", type: "Gondola", lastUpdated: "2025-01-24T15:30:00Z")
     ]
 } 

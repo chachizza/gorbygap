@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "gorby-logo-black.png",
+      "filename" : "icon-black.png",
       "idiom" : "universal"
     }
   ],
@@ -13,4 +13,4 @@
     "preserves-vector-representation" : true,
     "template-rendering-intent" : "original"
   }
-} 
+}

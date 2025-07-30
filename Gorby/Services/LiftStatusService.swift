@@ -21,18 +21,11 @@ class LiftStatusService: ObservableObject {
     // MARK: - Configuration
     private var baseURL: String {
         #if DEBUG
-        // Development: Use localhost for simulator, Mac IP for device testing
-        #if targetEnvironment(simulator)
-        return "http://localhost:3001/api"
+        // Development: Use working Fly.io backend
+        return "https://gorby-backend.fly.dev/api"
         #else
-        // For testing on real device with local server
-        // Update this IP with your Mac's IP if testing locally: ifconfig | grep "inet " | grep -v 127.0.0.1
-        return "http://192.168.1.100:3001/api" // 👈 UPDATE THIS WITH YOUR MAC'S IP IF TESTING LOCALLY
-        #endif
-        #else
-        // Production: Use your deployed Render server URL
-        // 🚀 UPDATE THIS AFTER RENDER DEPLOYMENT
-        return "https://gorby-backend.onrender.com/api" // 👈 WILL UPDATE WITH YOUR ACTUAL RENDER URL
+        // Production: Use working Fly.io backend
+        return "https://gorby-backend.fly.dev/api"
         #endif
     }
     
@@ -47,7 +40,10 @@ class LiftStatusService: ObservableObject {
                 throw LiftServiceError.invalidURL
             }
             
-            let (data, response) = try await URLSession.shared.data(from: url)
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 10 // 10 second timeout
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
@@ -60,7 +56,7 @@ class LiftStatusService: ObservableObject {
             lastUpdated = formatLastUpdated(liftResponse.lastUpdated)
             source = liftResponse.source
             
-            print("✅ Loaded \(lifts.count) lifts from ChatGPT-powered backend")
+            print("✅ Loaded \(lifts.count) lifts from Fly.io ChatGPT-powered backend")
             
         } catch {
             errorMessage = "Failed to load lift status: \(error.localizedDescription)"

@@ -17,7 +17,7 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // Header with theme toggle
                     HStack {
-                        Image(themeManager.currentTheme == .light ? "logo-dark" : "logo-light")
+                        Image(themeManager.currentTheme == .light ? "gorby-logo-black" : "gorby-logo-white")
                             .resizable()
                             .scaledToFit()
                             .frame(height: 40)

@@ -10,61 +10,53 @@ class WebcamService: ObservableObject {
     @Published var errorMessage: String?
     @Published var lastUpdated: Date?
     
-    private var cancellables = Set<AnyCancellable>()
-    private let baseURL = "http://10.0.0.238:3001/api"
+    private var refreshTimer: Timer?
     
     private init() {
-        // Start with an initial fetch
-        Task {
-            await fetchWebcams()
-        }
+        loadWebcams()
+        startAutoRefresh()
     }
     
-    func fetchWebcams() async {
-        isLoading = true
-        errorMessage = nil
-        
-        defer { isLoading = false }
-        
-        guard let url = URL(string: "\(baseURL)/webcams") else {
-            errorMessage = "Invalid URL"
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try JSONDecoder().decode(WebcamResponse.self, from: data)
-            
-            // Update on main thread
-            await MainActor.run {
-                self.webcams = response.webcams
-                self.lastUpdated = Date()
-                self.errorMessage = nil
-                
-                print("✅ WebcamService: Loaded \(response.webcams.count) live webcams")
-            }
-        } catch {
-            await MainActor.run {
-                self.errorMessage = "Failed to fetch webcams: \(error.localizedDescription)"
-                print("❌ WebcamService Error: \(error)")
-                
-                // Fallback: Keep existing data if available
-                if webcams.isEmpty {
-                    print("⚠️ WebcamService: No cached data available")
-                }
+    // MARK: - Webcam Data
+    
+    private func loadWebcams() {
+        webcams = [
+            WebcamData(name: "Whistler Peak", cameraId: "whistlerpeak", location: "Peak", elevation: 2182),
+            WebcamData(name: "Glacier", cameraId: "whistlerglacier", location: "Glacier", elevation: 1650),
+            WebcamData(name: "Roundhouse", cameraId: "whistlerroundhouse", location: "Mid-Mountain", elevation: 1856),
+            WebcamData(name: "Rendezvous", cameraId: "whistlerblackcomb", location: "Rendezvous", elevation: 1860),
+            WebcamData(name: "Whistler Village", cameraId: "whistlervillagefitz", location: "Village", elevation: 700),
+            WebcamData(name: "Blackcomb Base", cameraId: "whistlervillage", location: "Base", elevation: 675),
+            WebcamData(name: "Creekside", cameraId: "whistlercreekside", location: "Creekside", elevation: 850)
+        ]
+        lastUpdated = Date()
+    }
+    
+    // MARK: - Auto Refresh
+    
+    private func startAutoRefresh() {
+        // Refresh every 5 minutes
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
+            Task { @MainActor in
+                await self.refreshWebcams()
             }
         }
     }
     
     func refreshWebcams() async {
-        await fetchWebcams()
+        lastUpdated = Date()
+        // Update timestamps for all webcams
+        for i in 0..<webcams.count {
+            webcams[i] = WebcamData(
+                name: webcams[i].name,
+                cameraId: webcams[i].cameraId,
+                location: webcams[i].location,
+                elevation: webcams[i].elevation
+            )
+        }
     }
-}
-
-// MARK: - Response Models
-struct WebcamResponse: Codable {
-    let lastUpdated: String
-    let source: String
-    let webcamCount: Int
-    let webcams: [WebcamData]
+    
+    deinit {
+        refreshTimer?.invalidate()
+    }
 } 

@@ -7,6 +7,60 @@
 
 import Foundation
 
+struct SnowStakeData: Identifiable, Codable {
+    let id: UUID
+    let imageUrl: String
+    let timestamp: Date
+    let isLive: Bool
+    let lastUpdated: String
+    
+    init() {
+        self.id = UUID()
+        
+        // Generate current timestamp for URL
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH"
+        let currentTime = formatter.string(from: Date())
+        
+        self.imageUrl = "https://whistlerpeak.com/snow/stake_img/\(currentTime).jpg"
+        self.timestamp = Date()
+        self.isLive = true
+        self.lastUpdated = DateFormatter.timeOnly.string(from: Date())
+    }
+    
+    // Generate URL for a specific hour (for fallback)
+    static func generateUrl(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-HH"
+        let timeString = formatter.string(from: date)
+        return "https://whistlerpeak.com/snow/stake_img/\(timeString).jpg"
+    }
+    
+    // Generate fallback URLs (previous hours)
+    static func generateFallbackUrls() -> [String] {
+        let calendar = Calendar.current
+        var urls: [String] = []
+        
+        // Try previous 3 hours as fallback
+        for i in 1...3 {
+            if let previousHour = calendar.date(byAdding: .hour, value: -i, to: Date()) {
+                urls.append(generateUrl(for: previousHour))
+            }
+        }
+        
+        return urls
+    }
+}
+
+// DateFormatter extension for date formatting
+extension DateFormatter {
+    static let dateTime: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM dd, HH:mm"
+        return formatter
+    }()
+}
+
 struct HistoricalSnowImage: Identifiable, Codable {
     let id: UUID
     let timestamp: String

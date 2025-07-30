@@ -10,6 +10,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
 const OpenAI = require('openai');
+const { HttpsProxyAgent } = require('proxy-agent');
 require('dotenv').config();
 
 class LiftStatusScraper {
@@ -56,21 +57,70 @@ class LiftStatusScraper {
         try {
             this.log('Starting lift status scrape from Whistler Peak');
             
+            // Enhanced browser simulation to bypass IP blocking
+            const userAgents = [
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
+            ];
+            
+            const randomUserAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
+            this.log(`Using user agent: ${randomUserAgent}`);
+
             browser = await puppeteer.launch({
-                headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                timeout: parseInt(process.env.SCRAPING_TIMEOUT_MS) || 30000
+                headless: 'new',
+                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-gpu',
+                    '--disable-web-security',
+                    '--disable-features=VizDisplayCompositor',
+                    '--run-all-compositor-stages-before-draw',
+                    '--disable-background-timer-throttling',
+                    '--disable-renderer-backgrounding',
+                    '--disable-backgrounding-occluded-windows',
+                    '--disable-ipc-flooding-protection',
+                    '--disable-blink-features=AutomationControlled',
+                    '--disable-extensions',
+                    '--disable-plugins'
+                ],
+                timeout: 60000
             });
 
             const page = await browser.newPage();
             
-            // Set user agent to avoid blocking
-            await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+            // Set random user agent and enhanced headers to bypass IP blocking
+            await page.setUserAgent(randomUserAgent);
+            await page.setExtraHTTPHeaders({
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'Accept-Language': 'en-US,en;q=0.9,en;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'DNT': '1',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            });
+            
+            // Add random delay to simulate human behavior
+            const randomDelay = Math.floor(Math.random() * 3000) + 1000; // 1-4 seconds
+            this.log(`Adding random delay: ${randomDelay}ms`);
+            await new Promise(resolve => setTimeout(resolve, randomDelay));
             
             this.log('Navigating to Whistler Peak live lifts page');
             await page.goto(process.env.WHISTLER_LIFTS_URL, { 
-                waitUntil: 'networkidle2',
-                timeout: 30000 
+                waitUntil: 'domcontentloaded',
+                timeout: 45000 
             });
 
             // Wait for dynamic content to load

@@ -6,44 +6,45 @@
 //
 
 import Foundation
+import Combine
 
-@MainActor
 class SnowStakeViewModel: ObservableObject {
-    @Published var currentDepth: Int = 0
-    @Published var lastUpdated: String = ""
-    @Published var currentImageUrl: String = ""
-    @Published var historicalImages: [HistoricalSnowImage] = []
-    @Published var depthHistory: [SnowDepthDataPoint] = []
+    @Published var snowStakeData: SnowStakeData?
     @Published var isLoading = false
+    @Published var errorMessage: String?
+    @Published var lastUpdated: Date?
+    @Published var currentImageUrl: String = ""
+    
+    private let snowStakeService = SnowStakeService.shared
+    private var cancellables = Set<AnyCancellable>()
     
     init() {
-        loadMockData()
+        setupBindings()
     }
     
-    func loadMockData() {
-        currentDepth = 245
-        lastUpdated = DateFormatter.timeOnly.string(from: Date())
-        currentImageUrl = "https://whistler.com/snow-stake/current.jpg"
-        historicalImages = HistoricalSnowImage.mockImages
-        depthHistory = SnowDepthDataPoint.mockData
+    private func setupBindings() {
+        snowStakeService.$snowStakeData
+            .assign(to: \.snowStakeData, on: self)
+            .store(in: &cancellables)
+        
+        snowStakeService.$isLoading
+            .assign(to: \.isLoading, on: self)
+            .store(in: &cancellables)
+        
+        snowStakeService.$errorMessage
+            .assign(to: \.errorMessage, on: self)
+            .store(in: &cancellables)
+        
+        snowStakeService.$lastUpdated
+            .assign(to: \.lastUpdated, on: self)
+            .store(in: &cancellables)
+        
+        snowStakeService.$currentImageUrl
+            .assign(to: \.currentImageUrl, on: self)
+            .store(in: &cancellables)
     }
     
-    func refreshData() async {
-        isLoading = true
-        defer { isLoading = false }
-        
-        // Simulate API call
-        try? await Task.sleep(nanoseconds: 2_000_000_000)
-        
-        // In a real app, this would call the snow stake service
-        loadMockData()
+    func refreshData() {
+        snowStakeService.refreshSnowStakeData()
     }
-}
-
-extension DateFormatter {
-    static let timeOnly: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return formatter
-    }()
 } 

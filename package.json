@@ -1,0 +1,8 @@
+{
+  "name": "gorby-vercel",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^21.11.0"
+  }
+}
