@@ -169,6 +169,8 @@ This document tracks major integrations, setup processes, and technical mileston
 
 | Integration | Priority | Notes |
 |-------------|----------|-------|
+| **Lift Status** | **Critical** | Need real lift status API/scraping (OpenAI or alternative) |
+| **Real Snow Data** | **High** | Need snow depth API endpoint (WeatherKit doesn't provide this) |
 | Swift App ↔ Backend API | High | Connect iOS app to new backend endpoints |
 | Snow Stake Live Data | High | Connect to real snow depth monitoring |
 | Apres Ski Features | Medium | Restaurant/bar integration |
@@ -180,6 +182,8 @@ This document tracks major integrations, setup processes, and technical mileston
 
 | Date | Change |
 |------|--------|
+| January 2025 | **TODO: Real Snow Data** - WeatherKit doesn't provide snow depth, need alternative API |
+| January 2025 | **TODO: Lift Status** - Need real lift status implementation (OpenAI or alternative) |
 | January 2025 | Cleared lift status functionality completely |
 | January 2025 | Updated navigation titles to inline display |
 | January 2025 | Hidden Instagram token status from UI |

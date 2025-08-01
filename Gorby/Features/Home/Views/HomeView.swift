@@ -30,7 +30,7 @@ struct HomeView: View {
                     .padding(.top, 20)
                     
                     // New Snow Alert Banner with animated gradient
-                    AnimatedNewSnowBanner(snowAmount: viewModel.newSnowAmount, themeManager: themeManager)
+                    AnimatedNewSnowBanner(snowAmount: viewModel.newSnowAmount, snowLocation: viewModel.snowLocation, themeManager: themeManager)
                         .padding(.horizontal, 20)
                     
                     // Live Temps Round Icons (no background, no margins)
@@ -451,6 +451,7 @@ struct InstagramPostCard: View {
 
 struct AnimatedNewSnowBanner: View {
     let snowAmount: Int
+    let snowLocation: String
     @ObservedObject var themeManager: ThemeManager
     @State private var animationOffset: CGFloat = 0
     @State private var currentWeatherIcon: String = "sun.max"
@@ -464,10 +465,15 @@ struct AnimatedNewSnowBanner: View {
                     .fontWeight(.heavy)
                     .foregroundColor(.white)
                 
-                Text("\(snowAmount) cm")
+                Text(snowAmount == -1 ? "N/A" : "\(snowAmount) cm")
                     .font(.largeTitle)
                     .fontWeight(.heavy)
                     .foregroundColor(.white)
+                
+                Text(snowLocation)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white.opacity(0.8))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             

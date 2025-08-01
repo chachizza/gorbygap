@@ -13,6 +13,7 @@ import CoreLocation
 class HomeViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var newSnowAmount: Int = 0
+    @Published var snowLocation: String = "1850m"
     @Published var errorMessage: String?
     @Published var instagramPosts: [InstagramPost] = []
     @Published var instagramError: String?
@@ -28,12 +29,19 @@ class HomeViewModel: ObservableObject {
     }
     
     init() {
-        // Set summer conditions (no snow)
-        newSnowAmount = 0
-        
         Task {
+            await loadSnowData()
             await loadInstagramPosts()
         }
+    }
+    
+    func loadSnowData() async {
+        // TODO: Implement real snow data endpoint
+        // WeatherKit doesn't provide snow depth data
+        // Need to find alternative API for real snow measurements
+        print("⚠️ Snow data not implemented - need real snow API endpoint")
+        self.newSnowAmount = -1 // Use -1 to indicate N/A
+        self.snowLocation = "1850m"
     }
     
     func loadInstagramPosts() async {
@@ -52,6 +60,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func refreshData() async {
+        await loadSnowData()
         await loadInstagramPosts()
     }
     
