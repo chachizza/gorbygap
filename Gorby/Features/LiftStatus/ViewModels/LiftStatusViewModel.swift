@@ -106,8 +106,12 @@ class LiftStatusViewModel: ObservableObject {
     
     var dataSourceDescription: String {
         switch source {
+        case "live-data":
+            return "Live data"
+        case "vail-maps-api-realtime":
+            return "Live data"
         case "vail-resorts-api":
-            return "Live Epic Pass data"
+            return "Live data"
         case "fallback-data":
             return "Sample data"
         case "whistlerpeak.com":
@@ -116,6 +120,8 @@ class LiftStatusViewModel: ObservableObject {
             return "Live data"
         case "fallback":
             return "Fallback data"
+        case "no-data", "api-error":
+            return "Data unavailable"
         default:
             return "Live data"
         }
