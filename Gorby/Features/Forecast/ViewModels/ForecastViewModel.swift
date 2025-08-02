@@ -7,45 +7,41 @@
 
 import Foundation
 import WeatherKit
-import CoreLocation
-import SwiftUI
 
 @MainActor
 class ForecastViewModel: ObservableObject {
     @Published var forecast: [DayForecast] = []
-    @Published var currentConditions: CurrentConditions = CurrentConditions.mock
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var currentConditions: CurrentConditions?
     
     private let weatherService = WeatherKitService.shared
     
     init() {
         Task {
-            await loadWeatherData()
+            await loadForecast()
         }
     }
     
-    func loadWeatherData() async {
+    func loadForecast() async {
         isLoading = true
         errorMessage = nil
         
         let forecastData = await weatherService.fetchWeatherForecast()
         forecast = forecastData
         
-        // Check if we got real data or error data
-        if !forecastData.isEmpty {
-            if forecastData.first?.dayOfWeek == "Error" {
-                print("❌ Forecast failed to load (WeatherKit authentication error)")
-                errorMessage = "WeatherKit access denied. Check entitlements and Apple Developer account."
-            } else {
-                print("✅ Successfully loaded real WeatherKit forecast")
-            }
-        }
+        // TODO: Load real current conditions when API is available
+        // For now, show empty state - no mock data
+        currentConditions = nil
         
         isLoading = false
     }
     
-    func refreshForecast() async {
-        await loadWeatherData()
+    func refreshData() async {
+        await loadForecast()
     }
-} 
+    
+    func refreshForecast() async {
+        await loadForecast()
+    }
+}

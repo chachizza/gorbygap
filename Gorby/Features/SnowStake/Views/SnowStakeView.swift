@@ -19,12 +19,8 @@ struct SnowStakeView: View {
                     SnowStakeImageCard(viewModel: viewModel)
                         .padding(.horizontal, 20)
                     
-                    // Horizontal timeline of recent images
-                    SnowStakeTimeline(viewModel: viewModel)
-                        .padding(.horizontal, 20)
-                    
-                    // Info section
-                    SnowStakeInfoCard()
+                    // Grid of recent images
+                    SnowStakeGrid(viewModel: viewModel)
                         .padding(.horizontal, 20)
                 }
                 .padding(.vertical, 8)
@@ -49,19 +45,11 @@ struct SnowStakeImageCard: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Image container with proper aspect ratio
+            // Image container with full size
             ZStack {
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(
-                        LinearGradient(
-                            colors: themeManager.currentTheme == .greyscale ? 
-                                [Color.gray.opacity(0.3), Color.gray.opacity(0.5)] : 
-                                [Color(red: 1.0, green: 0.2, blue: 0.8), Color(red: 0.9, green: 0.1, blue: 0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 250)
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(maxWidth: .infinity, maxHeight: 400)
                 
                 if isLoading {
                     VStack {
@@ -97,41 +85,33 @@ struct SnowStakeImageCard: View {
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(maxWidth: .infinity, minHeight: 250)
+                        .frame(maxWidth: .infinity, maxHeight: 400)
                         .clipped()
-                        .cornerRadius(20)
+                }
+                
+                // Time badge overlay
+                VStack {
+                    HStack {
+                        Spacer()
+                        Text(formatCurrentTime())
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(mainImageBadgeColor)
+                            .cornerRadius(12)
+                            .padding(.top, 12)
+                            .padding(.trailing, 12)
+                    }
+                    Spacer()
                 }
             }
-            .frame(maxWidth: .infinity, minHeight: 250)
-            
-            // Timestamp below image
-            if let snowStakeData = viewModel.snowStakeData {
-                HStack {
-                    Spacer()
-                    Text("Image from \(DateFormatter.dateTime.string(from: snowStakeData.timestamp))")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding(.top, 8)
-                    Spacer()
-                }
-            }
+            .frame(maxWidth: .infinity, maxHeight: 400)
+            .clipped()
+            .cornerRadius(12)
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(
-                    LinearGradient(
-                        colors: themeManager.currentTheme == .greyscale ? 
-                            [Color.gray.opacity(0.3), Color.gray.opacity(0.5)] : 
-                            [Color(red: 1.0, green: 0.2, blue: 0.8), Color(red: 0.9, green: 0.1, blue: 0.7)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .shadow(color: themeManager.currentTheme == .greyscale ? 
-                        Color.gray.opacity(0.3) : Color(red: 1.0, green: 0.2, blue: 0.8).opacity(0.4), 
-                        radius: 8, x: 0, y: 4)
-        )
+        .frame(maxWidth: .infinity)
         .onAppear {
             if !hasLoadedOnce {
                 loadImage()
@@ -142,6 +122,17 @@ struct SnowStakeImageCard: View {
                 loadImage()
             }
         }
+    }
+    
+    private var mainImageBadgeColor: Color {
+        // Bright pink/magenta for main image (same as PEAK in Temps)
+        return Color(red: 1.0, green: 0.2, blue: 0.8)
+    }
+    
+    private func formatCurrentTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: Date())
     }
     
     private func loadImage() {
@@ -195,51 +186,24 @@ struct SnowStakeImageCard: View {
     }
 }
 
-struct SnowStakeTimeline: View {
+struct SnowStakeGrid: View {
     @ObservedObject var viewModel: SnowStakeViewModel
     @EnvironmentObject var themeManager: ThemeManager
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "clock.arrow.circlepath")
-                    .foregroundColor(.white)
-                Text("Recent Images")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                Spacer()
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(generateTimelineUrls()) { urlData in
-                        TimelineImageCard(
-                            imageUrl: urlData.url,
-                            timestamp: urlData.timestamp,
-                            isCurrent: urlData.isCurrent
-                        )
-                    }
-                }
-                .padding(.horizontal, 4)
+        LazyVGrid(columns: [
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8)
+        ], spacing: 8) {
+            ForEach(generateTimelineUrls()) { urlData in
+                GridImageCard(
+                    imageUrl: urlData.url,
+                    timestamp: urlData.timestamp,
+                    isCurrent: urlData.isCurrent,
+                    index: urlData.index
+                )
             }
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(
-                    LinearGradient(
-                        colors: themeManager.currentTheme == .greyscale ? 
-                            [Color.gray.opacity(0.3), Color.gray.opacity(0.5)] : 
-                            [Color(red: 0.0, green: 0.7, blue: 0.8), Color(red: 0.1, green: 0.9, blue: 1.0)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .shadow(color: themeManager.currentTheme == .greyscale ? 
-                        Color.gray.opacity(0.3) : Color(red: 0.0, green: 0.7, blue: 0.8).opacity(0.4), 
-                        radius: 8, x: 0, y: 4)
-        )
     }
     
     private func generateTimelineUrls() -> [TimelineUrlData] {
@@ -247,8 +211,8 @@ struct SnowStakeTimeline: View {
         let now = Date()
         var urls: [TimelineUrlData] = []
         
-        // Generate URLs for the last 5 hours
-        for i in 0..<5 {
+        // Generate URLs for the last 4 hours (2 rows of 2)
+        for i in 1...4 {
             if let hour = calendar.date(byAdding: .hour, value: -i, to: now) {
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd-HH"
@@ -256,13 +220,14 @@ struct SnowStakeTimeline: View {
                 let url = "https://whistlerpeak.com/snow/stake_img/\(timeString).jpg"
                 
                 let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
+                timeFormatter.dateFormat = "h:mm a"
                 let timestamp = timeFormatter.string(from: hour)
                 
                 urls.append(TimelineUrlData(
                     url: url,
                     timestamp: timestamp,
-                    isCurrent: i == 0
+                    isCurrent: false,
+                    index: i - 1
                 ))
             }
         }
@@ -271,52 +236,78 @@ struct SnowStakeTimeline: View {
     }
 }
 
-struct TimelineImageCard: View {
+struct GridImageCard: View {
     let imageUrl: String
     let timestamp: String
     let isCurrent: Bool
+    let index: Int
     @State private var image: UIImage?
     @State private var isLoading = true
     @EnvironmentObject var themeManager: ThemeManager
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 4) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.white.opacity(0.2))
-                    .frame(width: 80, height: 60)
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 100)
                 
                 if isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .scaleEffect(0.8)
+                        .scaleEffect(0.6)
                 } else if let image = image {
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 80, height: 60)
+                        .frame(height: 100)
                         .clipped()
-                        .cornerRadius(12)
                 } else {
                     Image(systemName: "photo")
-                        .font(.title2)
+                        .font(.title3)
                         .foregroundColor(.white.opacity(0.6))
                 }
                 
-                if isCurrent {
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white, lineWidth: 2)
-                        .frame(width: 80, height: 60)
+                // Time badge overlay
+                VStack {
+                    HStack {
+                        Spacer()
+                        Text(timestamp)
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(gridBadgeColor)
+                            .cornerRadius(6)
+                            .padding(.top, 2)
+                            .padding(.trailing, 2)
+                    }
+                    Spacer()
                 }
             }
-            
-            Text(timestamp)
-                .font(.caption)
-                .fontWeight(isCurrent ? .bold : .medium)
-                .foregroundColor(.white)
+            .frame(height: 100)
+            .clipped()
+            .cornerRadius(8)
         }
         .onAppear {
             loadImage()
+        }
+    }
+    
+    private var gridBadgeColor: Color {
+        // Use different colors for each grid image, inspired by Temps page
+        switch index {
+        case 0:
+            return Color(red: 0.6, green: 0.2, blue: 1.0) // Purple (7TH HEAVEN)
+        case 1:
+            return Color(red: 1.0, green: 0.5, blue: 0.0) // Orange (ROUNDHOUSE)
+        case 2:
+            return Color(red: 0.0, green: 0.7, blue: 0.8) // Turquoise (RENDEZVOUS)
+        case 3:
+            return Color(red: 0.2, green: 0.8, blue: 0.4) // Green (MIDSTATION)
+        default:
+            return Color(red: 1.0, green: 0.4, blue: 0.8) // Lighter pink (VILLAGE)
         }
     }
     
@@ -348,69 +339,23 @@ struct TimelineImageCard: View {
     }
 }
 
-struct SnowStakeInfoCard: View {
-    @EnvironmentObject var themeManager: ThemeManager
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            HStack {
-                Image(systemName: "ruler")
-                    .foregroundColor(.white)
-                Text("Snow Ruler")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                Spacer()
-            }
-            
-            Text("Live snow stake image from Whistler Peak")
-                .font(.subheadline)
-                .foregroundColor(.white.opacity(0.9))
-                .multilineTextAlignment(.leading)
-            
-            HStack {
-                Image(systemName: "clock")
-                    .foregroundColor(.white)
-                Text("Updates hourly")
-                    .font(.caption)
-                    .foregroundColor(.white.opacity(0.9))
-                Spacer()
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(
-                    LinearGradient(
-                        colors: themeManager.currentTheme == .greyscale ? 
-                            [Color.gray.opacity(0.3), Color.gray.opacity(0.5)] : 
-                            [Color(red: 1.0, green: 0.5, blue: 0.0), Color(red: 1.0, green: 0.7, blue: 0.2)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .shadow(color: themeManager.currentTheme == .greyscale ? 
-                        Color.gray.opacity(0.3) : Color(red: 1.0, green: 0.5, blue: 0.0).opacity(0.4), 
-                        radius: 8, x: 0, y: 4)
-        )
-    }
-}
-
 struct TimelineUrlData: Identifiable, Hashable {
     let id = UUID()
     let url: String
     let timestamp: String
     let isCurrent: Bool
+    let index: Int
     
     // Hashable conformance
     func hash(into hasher: inout Hasher) {
         hasher.combine(url)
         hasher.combine(timestamp)
         hasher.combine(isCurrent)
+        hasher.combine(index)
     }
     
     static func == (lhs: TimelineUrlData, rhs: TimelineUrlData) -> Bool {
-        return lhs.url == rhs.url && lhs.timestamp == rhs.timestamp && lhs.isCurrent == rhs.isCurrent
+        return lhs.url == rhs.url && lhs.timestamp == rhs.timestamp && lhs.isCurrent == rhs.isCurrent && lhs.index == rhs.index
     }
 }
 

@@ -13,8 +13,10 @@ class TempsViewModel: ObservableObject {
     @Published var temperatureStations: [TemperatureStation] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var showingRetryButton = false
     
     private let weatherService = WeatherKitService.shared
+    private let errorHandler = ErrorHandlingService.shared
     
     init() {
         Task {
@@ -25,6 +27,7 @@ class TempsViewModel: ObservableObject {
     func loadWeatherData() async {
         isLoading = true
         errorMessage = nil
+        showingRetryButton = false
         
         let stations = await weatherService.fetchAllTemperatureStations()
         temperatureStations = stations
@@ -34,11 +37,31 @@ class TempsViewModel: ObservableObject {
         
         if realDataCount > 0 {
             print("✅ Successfully loaded \(realDataCount) real WeatherKit stations")
+            errorMessage = nil
         }
+        
         if errorCount > 0 {
-            print("❌ \(errorCount) stations failed to load (WeatherKit authentication error)")
+            print("❌ \(errorCount) stations failed to load")
+            
             if errorCount == stations.count {
-                errorMessage = "WeatherKit access denied. Check entitlements and Apple Developer account."
+                // Complete failure
+                let error = AppError(
+                    category: .weather,
+                    title: "Weather Data Unavailable",
+                    message: "Unable to access weather information",
+                    context: "All temperature stations failed",
+                    suggestion: "Check your internet connection and try again. If the problem persists, weather services may be temporarily unavailable.",
+                    isRetryable: true
+                )
+                
+                errorMessage = error.message
+                showingRetryButton = true
+                errorHandler.handleError(error, context: "Loading all temperature data", showToUser: true)
+                
+            } else {
+                // Partial failure
+                errorMessage = "Some weather data couldn't be loaded (\(errorCount) of \(stations.count) stations)"
+                showingRetryButton = true
             }
         }
         
@@ -48,4 +71,13 @@ class TempsViewModel: ObservableObject {
     func refreshData() async {
         await loadWeatherData()
     }
-} 
+    
+    /// Retry loading with haptic feedback
+    func retryWithFeedback() async {
+        // Provide haptic feedback for retry action
+        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+        impactFeedback.impactOccurred()
+        
+        await loadWeatherData()
+    }
+}

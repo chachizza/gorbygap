@@ -10,11 +10,14 @@ import SwiftUI
 
 @MainActor
 class InstagramService: ObservableObject {
-    // App credentials for token refresh
-    private let appId = "1041465901389740"
-    private let appSecret = "07b347bceebb140e2e75bd8c2f187c78"
-    private let userId = "17841400370020314"
-    private let mediaId = "17843725936046658"
+    // Secure configuration
+    private let config = Configuration.shared
+    
+    // App credentials from secure configuration
+    private var appId: String { config.instagramAppId }
+    private var appSecret: String { config.instagramAppSecret }
+    private var userId: String { config.instagramUserId }
+    private var mediaId: String { config.instagramMediaId }
     
     // Token management
     @Published var isRefreshingToken = false
@@ -36,6 +39,15 @@ class InstagramService: ObservableObject {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: tokenExpirationKey)
+        }
+    }
+    
+    init() {
+        // Validate configuration on init
+        let warnings = config.validateCredentials()
+        if !warnings.isEmpty {
+            print("⚠️ Instagram Service Configuration Warnings:")
+            warnings.forEach { print("  - \($0)") }
         }
     }
     
@@ -233,4 +245,4 @@ enum InstagramError: Error {
             return "Failed to refresh Instagram token."
         }
     }
-} 
+}

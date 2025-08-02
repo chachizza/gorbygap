@@ -88,6 +88,10 @@ class LiftStatusViewModel: ObservableObject {
         lifts.count
     }
     
+    var liftsWithWaitTimes: Int {
+        lifts.filter { $0.waitTime != nil && $0.isOpen }.count
+    }
+    
     var whistlerLifts: [LiftData] {
         lifts.filter { $0.mountain.lowercased() == "whistler" }
     }
@@ -102,10 +106,14 @@ class LiftStatusViewModel: ObservableObject {
     
     var dataSourceDescription: String {
         switch source {
+        case "vail-resorts-api":
+            return "Live Epic Pass data"
+        case "fallback-data":
+            return "Sample data"
         case "whistlerpeak.com":
-            return "Live data via ChatGPT"
+            return "Live data"
         case "whistlerpeak.com-noai":
-            return "Live scraping"
+            return "Live data"
         case "fallback":
             return "Fallback data"
         default:

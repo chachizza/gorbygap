@@ -24,22 +24,28 @@ struct TempsView: View {
                     }
                 } else if let error = viewModel.errorMessage {
                     VStack(spacing: 16) {
-                        Image(systemName: "exclamationmark.triangle")
+                        Image(systemName: "thermometer.slash")
                             .font(.largeTitle)
                             .foregroundColor(.orange)
+                        
+                        Text("Temperature Data Unavailable")
+                            .font(.headline)
+                        
                         Text(error)
                             .multilineTextAlignment(.center)
                             .foregroundColor(.secondary)
-                        Button("Try Again") {
-                            Task {
-                                await viewModel.refreshData()
+                            .padding(.horizontal)
+                        
+                        if viewModel.showingRetryButton {
+                            Button("Try Again") {
+                                Task {
+                                    await viewModel.retryWithFeedback()
+                                }
                             }
+                            .buttonStyle(.borderedProminent)
                         }
-                        .padding()
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(8)
                     }
-                    .padding()
+                    .padding()                    .padding()
                 } else {
                     ScrollView {
                         VStack(spacing: 20) {

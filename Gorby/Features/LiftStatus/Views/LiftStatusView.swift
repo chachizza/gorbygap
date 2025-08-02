@@ -18,14 +18,33 @@ struct LiftStatusView: View {
                 // Status Header
                 StatusHeaderView(viewModel: viewModel, themeManager: themeManager)
                 
-                if viewModel.isLoading && viewModel.lifts.isEmpty {
-                    // Loading State
+                if viewModel.isLoading {
                     LoadingView()
-                } else if let error = viewModel.errorMessage, viewModel.lifts.isEmpty {
-                    // Error State
-                    ErrorView(error: error, onRetry: {
-                        Task { await viewModel.refreshData() }
-                    })
+                } else if viewModel.lifts.isEmpty || viewModel.source == "no-data" {
+                    VStack(spacing: 20) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 50))
+                            .foregroundColor(.orange)
+                        
+                        Text("Live Lift Data Unavailable")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(themeManager.currentTheme.textColor)
+                        
+                        Text("Lift status information is temporarily unavailable. Please check back later.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        Button("Try Again") {
+                            Task {
+                                await viewModel.refreshData()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     // Main Content
                     ScrollView {
@@ -36,8 +55,14 @@ struct LiftStatusView: View {
                             // Lifts by Mountain
                             if !viewModel.whistlerLifts.isEmpty {
                                 MountainSection(
-                                    title: "Whistler Mountain",
-                                    lifts: viewModel.filteredLifts.filter { $0.mountain.lowercased() == "whistler" },
+                                    title: "Whistler Mountain", 
+                                    lifts: viewModel.whistlerLifts.sorted { lift1, lift2 in
+                                        // Sort open lifts first, then by name
+                                        if lift1.isOpen != lift2.isOpen {
+                                            return lift1.isOpen
+                                        }
+                                        return lift1.liftName < lift2.liftName
+                                    },
                                     themeManager: themeManager
                                 )
                             }
@@ -45,7 +70,13 @@ struct LiftStatusView: View {
                             if !viewModel.blackcombLifts.isEmpty {
                                 MountainSection(
                                     title: "Blackcomb Mountain", 
-                                    lifts: viewModel.filteredLifts.filter { $0.mountain.lowercased() == "blackcomb" },
+                                    lifts: viewModel.blackcombLifts.sorted { lift1, lift2 in
+                                        // Sort open lifts first, then by name
+                                        if lift1.isOpen != lift2.isOpen {
+                                            return lift1.isOpen
+                                        }
+                                        return lift1.liftName < lift2.liftName
+                                    },
                                     themeManager: themeManager
                                 )
                             }
@@ -53,7 +84,13 @@ struct LiftStatusView: View {
                             if !viewModel.interconnectLifts.isEmpty {
                                 MountainSection(
                                     title: "Interconnect",
-                                    lifts: viewModel.filteredLifts.filter { $0.mountain.lowercased() == "both" },
+                                    lifts: viewModel.interconnectLifts.sorted { lift1, lift2 in
+                                        // Sort open lifts first, then by name
+                                        if lift1.isOpen != lift2.isOpen {
+                                            return lift1.isOpen
+                                        }
+                                        return lift1.liftName < lift2.liftName
+                                    },
                                     themeManager: themeManager
                                 )
                             }
@@ -80,13 +117,13 @@ struct LiftStatusView: View {
             }
             .alert("Manual Refresh", isPresented: $showingManualRefresh) {
                 Button("Cancel", role: .cancel) { }
-                Button("Refresh with ChatGPT") {
+                Button("Refresh Data") {
                     Task {
                         await viewModel.triggerManualRefresh()
                     }
                 }
             } message: {
-                Text("This will trigger a fresh scrape using ChatGPT to parse the latest data from Whistler's website.")
+                Text("This will trigger a fresh data fetch from the lift status API.")
             }
         }
         .background(themeManager.currentTheme.backgroundColor)
@@ -137,6 +174,10 @@ struct StatusHeaderView: View {
             HStack(spacing: 12) {
                 StatusIndicator(color: .green, label: "Open", count: viewModel.openLiftsCount)
                 StatusIndicator(color: .red, label: "Closed", count: viewModel.totalLiftsCount - viewModel.openLiftsCount)
+                
+                if viewModel.liftsWithWaitTimes > 0 {
+                    StatusIndicator(color: .orange, label: "Wait Times", count: viewModel.liftsWithWaitTimes)
+                }
             }
         }
         .padding()
@@ -223,33 +264,68 @@ struct LiftCard: View {
     @ObservedObject var themeManager: ThemeManager
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(lift.liftName)
-                    .font(.headline)
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                
-                Text(lift.type)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            VStack(alignment: .trailing, spacing: 4) {
-                HStack(spacing: 6) {
-                    Circle()
-                        .fill(statusColor)
-                        .frame(width: 10, height: 10)
+        VStack(spacing: 12) {
+            // Main lift info
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(lift.liftName)
+                        .font(.headline)
+                        .foregroundColor(themeManager.currentTheme.textColor)
                     
-                    Text(lift.status)
+                    Text(lift.type)
                         .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(statusColor)
+                        .foregroundColor(.secondary)
                 }
                 
-                Text(lift.mountainEmoji)
-                    .font(.caption)
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(statusColor)
+                            .frame(width: 10, height: 10)
+                        
+                        Text(lift.status)
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(statusColor)
+                    }
+                    
+                    Text(lift.mountainEmoji)
+                        .font(.caption)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(4)
+                }
+            }
+            
+            // Wait time and capacity info
+            HStack {
+                // Wait time
+                HStack(spacing: 4) {
+                    Image(systemName: "clock")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text(lift.waitTimeText)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(waitTimeColor)
+                }
+                
+                Spacer()
+                
+                // Capacity
+                HStack(spacing: 4) {
+                    Image(systemName: "person.2")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text(lift.capacityText)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
         }
         .padding()
@@ -266,8 +342,23 @@ struct LiftCard: View {
             return .red
         case "scheduled":
             return .orange
-        case "on hold":
+        case "maintenance":
+            return .purple
+        default:
+            return .gray
+        }
+    }
+    
+    private var waitTimeColor: Color {
+        switch lift.waitTimeColor {
+        case "green":
+            return .green
+        case "yellow":
             return .yellow
+        case "orange":
+            return .orange
+        case "red":
+            return .red
         default:
             return .gray
         }
@@ -284,7 +375,7 @@ struct LoadingView: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             
-            Text("🤖 ChatGPT is parsing live data")
+            Text("Fetching live data")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }

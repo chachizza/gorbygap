@@ -10,6 +10,10 @@ import Foundation
 struct SnowAlert: Identifiable, Codable {
     let id: UUID
     let snowAmount: Int
+    let message: String
+    let timestamp: Date
+    let threshold: Int
+    let isRead: Bool
     
     init(snowAmount: Int, message: String, timestamp: Date, threshold: Int, isRead: Bool) {
         self.id = UUID()
@@ -33,39 +37,13 @@ struct SnowAlert: Identifiable, Codable {
         self.threshold = try container.decode(Int.self, forKey: .threshold)
         self.isRead = try container.decode(Bool.self, forKey: .isRead)
     }
-    let message: String
-    let timestamp: Date
-    let threshold: Int
-    let isRead: Bool
     
-    static let mockAlerts: [SnowAlert] = [
-        SnowAlert(
-            snowAmount: 25,
-            message: "Heavy snowfall overnight! 25cm of fresh powder awaits.",
-            timestamp: Calendar.current.date(byAdding: .hour, value: -8, to: Date()) ?? Date(),
-            threshold: 20,
-            isRead: true
-        ),
-        SnowAlert(
-            snowAmount: 15,
-            message: "Fresh snow alert! 15cm of new snow since yesterday.",
-            timestamp: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(),
-            threshold: 10,
-            isRead: true
-        ),
-        SnowAlert(
-            snowAmount: 32,
-            message: "Epic powder day! 32cm of fresh snow reported.",
-            timestamp: Calendar.current.date(byAdding: .day, value: -5, to: Date()) ?? Date(),
-            threshold: 30,
-            isRead: true
-        ),
-        SnowAlert(
-            snowAmount: 18,
-            message: "Good news! 18cm of new snow since this morning.",
-            timestamp: Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date(),
-            threshold: 15,
-            isRead: false
-        )
-    ]
-} 
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(snowAmount, forKey: .snowAmount)
+        try container.encode(message, forKey: .message)
+        try container.encode(timestamp, forKey: .timestamp)
+        try container.encode(threshold, forKey: .threshold)
+        try container.encode(isRead, forKey: .isRead)
+    }
+}

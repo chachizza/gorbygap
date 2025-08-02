@@ -4,5 +4,9 @@
 <dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Gorby needs location access to provide weather data for your current mountain location and show relevant mountain conditions.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Gorby needs location access to provide weather data for your current mountain location and show relevant mountain conditions.</string>
 </dict>
 </plist>

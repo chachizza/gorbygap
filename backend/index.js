@@ -1,6 +1,6 @@
 /**
  * Gorby Backend API Server
- * Express server providing live lift status and webcam data
+ * Express server providing live lift status data
  * Follows .cursorrules: No mock data, live data only, proper error handling
  */
 
@@ -13,8 +13,7 @@ const fs = require('fs-extra');
 const path = require('path');
 require('dotenv').config();
 
-const LiftStatusScraper = require('./scripts/fetchLifts');
-const WebcamScraper = require('./scripts/fetchWebcams');
+const DirectLiftAPI = require('./scripts/fetchLiftsDirect');
 const DataFetcher = require('./scripts/fetchAll');
 
 class GorbyAPI {
@@ -55,8 +54,8 @@ class GorbyAPI {
                 
                 if (!await fs.pathExists(filePath)) {
                     // If no cached data, fetch fresh data
-                    const scraper = new LiftStatusScraper();
-                    const data = await scraper.run();
+                    const api = new DirectLiftAPI();
+                    const data = await api.run();
                     return res.json(data);
                 }
 
@@ -81,44 +80,11 @@ class GorbyAPI {
             }
         });
 
-        // Live webcam endpoint
-        this.app.get('/api/webcams', async (req, res) => {
-            try {
-                const filePath = path.join(this.dataDir, 'webcams.json');
-                
-                if (!await fs.pathExists(filePath)) {
-                    // If no cached data, fetch fresh data
-                    const scraper = new WebcamScraper();
-                    const data = await scraper.run();
-                    return res.json(data);
-                }
-
-                const data = await fs.readJson(filePath);
-                const cacheAge = Date.now() - new Date(data.lastUpdated).getTime();
-                const maxAge = parseInt(process.env.CACHE_DURATION_MINUTES) * 60 * 1000 || 600000; // 10 minutes default
-
-                // If data is stale, refresh in background
-                if (cacheAge > maxAge) {
-                    // Don't await - refresh in background
-                    this.refreshWebcamData();
-                }
-
-                res.json(data);
-            } catch (error) {
-                console.error('Webcam API error:', error);
-                res.status(500).json({
-                    error: 'Failed to fetch webcam data',
-                    message: error.message,
-                    timestamp: new Date().toISOString()
-                });
-            }
-        });
-
-        // Manual refresh endpoints
+        // Manual refresh endpoint for lifts
         this.app.post('/api/lifts/refresh', async (req, res) => {
             try {
-                const scraper = new LiftStatusScraper();
-                const data = await scraper.run();
+                const api = new DirectLiftAPI();
+                const data = await api.run();
                 res.json({ success: true, data });
             } catch (error) {
                 res.status(500).json({
@@ -128,35 +94,65 @@ class GorbyAPI {
             }
         });
 
-        this.app.post('/api/webcams/refresh', async (req, res) => {
+        // Combined data endpoint (lifts only)
+        this.app.get('/api/all', async (req, res) => {
             try {
-                const scraper = new WebcamScraper();
-                const data = await scraper.run();
-                res.json({ success: true, data });
+                const lifts = await this.loadDataFile('lifts.json');
+
+                res.json({
+                    lastUpdated: new Date().toISOString(),
+                    lifts: lifts || { lifts: [], liftCount: 0 }
+                });
             } catch (error) {
                 res.status(500).json({
-                    error: 'Failed to refresh webcam data',
+                    error: 'Failed to fetch combined data',
+                    message: error.message,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        });
+
+        // Data files endpoint
+        this.app.get('/api/data/:filename', async (req, res) => {
+            try {
+                const filename = req.params.filename;
+                const filePath = path.join(this.dataDir, filename);
+                
+                if (!await fs.pathExists(filePath)) {
+                    return res.status(404).json({
+                        error: 'File not found',
+                        filename: filename
+                    });
+                }
+                
+                const data = await fs.readJson(filePath);
+                res.json(data);
+            } catch (error) {
+                res.status(500).json({
+                    error: 'Failed to read data file',
                     message: error.message
                 });
             }
         });
 
-        // Combined data endpoint
-        this.app.get('/api/all', async (req, res) => {
+        // Status endpoint
+        this.app.get('/api/status', async (req, res) => {
             try {
-                const [lifts, webcams] = await Promise.all([
-                    this.loadDataFile('lifts.json'),
-                    this.loadDataFile('webcams.json')
-                ]);
+                const liftsExists = await fs.pathExists(path.join(this.dataDir, 'lifts.json'));
 
                 res.json({
-                    lastUpdated: new Date().toISOString(),
-                    lifts: lifts || { lifts: [], liftCount: 0 },
-                    webcams: webcams || { webcams: [], webcamCount: 0 }
+                    status: 'operational',
+                    timestamp: new Date().toISOString(),
+                    services: {
+                        lifts: liftsExists ? 'available' : 'unavailable'
+                    },
+                    lastUpdated: {
+                        lifts: liftsExists ? await this.getLastUpdated('lifts.json') : null
+                    }
                 });
             } catch (error) {
                 res.status(500).json({
-                    error: 'Failed to fetch combined data',
+                    error: 'Failed to get status',
                     message: error.message
                 });
             }
@@ -170,57 +166,63 @@ class GorbyAPI {
                 availableEndpoints: [
                     'GET /health',
                     'GET /api/lifts',
-                    'GET /api/webcams',
                     'GET /api/all',
-                    'POST /api/lifts/refresh',
-                    'POST /api/webcams/refresh'
+                    'GET /api/status',
+                    'GET /api/data/:filename',
+                    'POST /api/lifts/refresh'
                 ]
             });
         });
     }
 
     async loadDataFile(filename) {
-        const filePath = path.join(this.dataDir, filename);
-        if (await fs.pathExists(filePath)) {
-            return await fs.readJson(filePath);
+        try {
+            const filePath = path.join(this.dataDir, filename);
+            if (await fs.pathExists(filePath)) {
+                return await fs.readJson(filePath);
+            }
+            return null;
+        } catch (error) {
+            console.error(`Error loading ${filename}:`, error);
+            return null;
         }
-        return null;
     }
 
     async refreshLiftData() {
         try {
-            console.log('Background refresh: lift data');
-            const scraper = new LiftStatusScraper();
-            await scraper.run();
+            console.log('🔄 Refreshing lift data in background...');
+            const api = new DirectLiftAPI();
+            await api.run();
+            console.log('✅ Lift data refreshed successfully');
         } catch (error) {
-            console.error('Background lift refresh failed:', error.message);
+            console.error('❌ Failed to refresh lift data:', error);
         }
     }
 
-    async refreshWebcamData() {
+    async getLastUpdated(filename) {
         try {
-            console.log('Background refresh: webcam data');
-            const scraper = new WebcamScraper();
-            await scraper.run();
+            const filePath = path.join(this.dataDir, filename);
+            if (await fs.pathExists(filePath)) {
+                const data = await fs.readJson(filePath);
+                return data.lastUpdated || null;
+            }
+            return null;
         } catch (error) {
-            console.error('Background webcam refresh failed:', error.message);
+            return null;
         }
     }
 
     setupCronJobs() {
-        // Refresh data every 7 minutes as requested
+        // Refresh lift data every 7 minutes
         cron.schedule('*/7 * * * *', async () => {
-            console.log('Scheduled data refresh starting...');
-            try {
-                const fetcher = new DataFetcher();
-                await fetcher.fetchAll();
-                console.log('Scheduled data refresh completed');
-            } catch (error) {
-                console.error('Scheduled refresh failed:', error.message);
-            }
+            console.log('🕐 Scheduled lift data refresh...');
+            await this.refreshLiftData();
         });
 
-        console.log('Cron job scheduled: data refresh every 7 minutes');
+        // Health check every 5 minutes
+        cron.schedule('*/5 * * * *', () => {
+            console.log('💚 Health check - server running normally');
+        });
     }
 
     async start() {
@@ -228,36 +230,20 @@ class GorbyAPI {
             // Ensure data directory exists
             await fs.ensureDir(this.dataDir);
             
-            // Initial data fetch on startup
-            console.log('Performing initial data fetch...');
-            try {
-                const fetcher = new DataFetcher();
-                await fetcher.fetchAll();
-                console.log('Initial data fetch completed');
-            } catch (error) {
-                console.warn('Initial data fetch failed, server will start anyway:', error.message);
-            }
-
+            // Start server
             this.app.listen(this.port, this.host, () => {
-                console.log(`🚀 Gorby API Server running on http://${this.host}:${this.port}`);
-                console.log('📡 Live data endpoints:');
-                console.log(`   GET  http://${this.host}:${this.port}/api/lifts`);
-                console.log(`   GET  http://${this.host}:${this.port}/api/webcams`);
-                console.log(`   GET  http://${this.host}:${this.port}/api/all`);
-                console.log('🔄 Auto-refresh: every 7 minutes');
+                console.log(`🚀 Gorby Backend API running on http://${this.host}:${this.port}`);
+                console.log(` Health check: http://${this.host}:${this.port}/health`);
+                console.log(`🎿 Lift status: http://${this.host}:${this.port}/api/lifts`);
+                console.log(`📈 Status: http://${this.host}:${this.port}/api/status`);
             });
-
         } catch (error) {
-            console.error('Failed to start server:', error);
+            console.error('❌ Failed to start server:', error);
             process.exit(1);
         }
     }
 }
 
-// Start server if called directly
-if (require.main === module) {
-    const api = new GorbyAPI();
-    api.start();
-}
-
-module.exports = GorbyAPI; 
+// Start the server
+const api = new GorbyAPI();
+api.start().catch(console.error); 

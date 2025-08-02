@@ -373,21 +373,8 @@ class WeatherKitService {
     }
 }
 
-// MARK: - Extensions
 
-extension DateFormatter {
-    static let dayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E" // Short day name (Mon, Tue, etc.)
-        return formatter
-    }()
-    
-    static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d" // Jan 17
-        return formatter
-    }()
-}
+
 
 enum WeatherError: Error {
     case fetchFailed(String)
@@ -401,4 +388,4 @@ enum WeatherError: Error {
             return "Weather data is currently unavailable"
         }
     }
-} 
+}

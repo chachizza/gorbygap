@@ -23,7 +23,7 @@ class SnowAlertsViewModel: ObservableObject {
     }
     
     func loadSettings() {
-        // In a real app, load from UserDefaults
+        // Load from UserDefaults
         snowThreshold = UserDefaults.standard.object(forKey: "snowThreshold") as? Int ?? 20
         snowAlertsEnabled = UserDefaults.standard.bool(forKey: "snowAlertsEnabled")
         hourlyCheck = UserDefaults.standard.bool(forKey: "hourlyCheck")
@@ -36,7 +36,9 @@ class SnowAlertsViewModel: ObservableObject {
     }
     
     func loadRecentAlerts() {
-        recentAlerts = SnowAlert.mockAlerts
+        // TODO: Load real snow alerts from API when implemented
+        // For now, show empty state - no mock data
+        recentAlerts = []
     }
     
     func requestNotificationPermission() {
@@ -48,18 +50,34 @@ class SnowAlertsViewModel: ObservableObject {
     }
     
     func sendTestNotification() {
+        guard isAuthorized else {
+            print("❌ Notifications not authorized")
+            return
+        }
+        
         let content = UNMutableNotificationContent()
-        content.title = "Whistler Snow Alert Test"
-        content.body = "This is a test notification. Your snow alerts are working!"
+        content.title = "❄️ Snow Alert Test"
+        content.body = "This is a test notification from Gorby"
         content.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(
+            identifier: "test-notification-\(UUID().uuidString)",
+            content: content,
+            trigger: trigger
+        )
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Test notification error: \(error)")
+                print("❌ Test notification error: \(error)")
+            } else {
+                print("✅ Test notification scheduled")
             }
         }
     }
-} 
+    
+    private var isAuthorized: Bool {
+        // TODO: Implement proper authorization check
+        return true
+    }
+}

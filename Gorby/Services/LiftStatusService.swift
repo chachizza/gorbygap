@@ -20,15 +20,8 @@ class LiftStatusService: ObservableObject {
     
     // MARK: - Configuration
     private var baseURL: String {
-        #if DEBUG
-        // Development: Use working Fly.io backend
-        return "https://gorby-backend.fly.dev/api"
-        #else
-        // Production: Use working Fly.io backend
-        return "https://gorby-backend.fly.dev/api"
-        #endif
-    }
-    
+        return Configuration.shared.backendBaseURL
+    }    
     private init() {}
     
     func fetchLifts() async {
@@ -56,18 +49,16 @@ class LiftStatusService: ObservableObject {
             lastUpdated = formatLastUpdated(liftResponse.lastUpdated)
             source = liftResponse.source
             
-            print("✅ Loaded \(lifts.count) lifts from Fly.io ChatGPT-powered backend")
+            print("✅ Loaded \(lifts.count) lifts from API")
             
         } catch {
             errorMessage = "Failed to load lift status: \(error.localizedDescription)"
             print("❌ Lift fetch error: \(error)")
             
-            // Use fallback data if available
-            if lifts.isEmpty {
-                lifts = LiftData.mockLifts
-                source = "fallback"
-                lastUpdated = "Just now"
-            }
+            // No fallback data - show empty state
+            lifts = []
+            source = "no-data"
+            lastUpdated = "Just now"
         }
         
         isLoading = false

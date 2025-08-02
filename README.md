@@ -86,3 +86,41 @@ For support or feature requests, please contact the development team.
 ---
 
 *Built with ❄️ for the Whistler community* 
+## 📋 Production Checklist
+
+### Before App Store Submission
+
+- [ ] **Move Instagram credentials to Info.plist:**
+  ```xml
+  <key>INSTAGRAM_APP_ID</key>
+  <string>1041465901389740</string>
+  <key>INSTAGRAM_APP_SECRET</key>
+  <string>07b347bceebb140e2e75bd8c2f187c78</string>
+  <key>INSTAGRAM_USER_ID</key>
+  <string>17841400370020314</string>
+  <key>INSTAGRAM_MEDIA_ID</key>
+  <string>17843725936046658</string>
+  ```
+
+- [ ] **Remove fallback values from Configuration.swift**
+  - Change fallback values to `fatalError("CREDENTIAL not configured")`
+  - Ensure validation passes without warnings
+
+- [ ] **Update legal documents with contact information:**
+  - Replace `[Your Contact Email]` in privacy-policy.md
+  - Replace `[Your Website]` in terms-of-service.md
+  - Replace `[Your Business Address]` in privacy-policy.md
+  - Replace `[Your Jurisdiction]` in terms-of-service.md
+
+- [ ] **Complete app icon set** (all required sizes)
+- [ ] **Prepare App Store metadata and screenshots**
+- [ ] **Test on multiple devices and iOS versions**
+- [ ] **Verify all APIs work with production credentials**
+
+### Security Notes
+
+- All hardcoded credentials have been moved to secure configuration
+- Privacy policy and terms of service are App Store compliant
+- Location permissions properly configured
+- No mock data remains in production code
+

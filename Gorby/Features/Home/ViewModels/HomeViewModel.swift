@@ -21,6 +21,7 @@ class HomeViewModel: ObservableObject {
     @Published var isLoadingInstagram = false
     
     private let instagramService = InstagramService()
+    private let errorHandler = ErrorHandlingService.shared
     
     var currentDate: String {
         let formatter = DateFormatter()
@@ -46,31 +47,51 @@ class HomeViewModel: ObservableObject {
     
     func loadInstagramPosts() async {
         isLoadingInstagram = true
+        instagramError = nil
         
         do {
             instagramPosts = try await instagramService.fetchInstagramPosts()
             let status = instagramService.getTokenStatus()
-            instagramTokenStatus = ": \(status.isValid), Expires in: \(status.daysUntilExpiration) days"
+            instagramTokenStatus = "Valid - Expires in \(status.daysUntilExpiration) days"
+            
         } catch {
-            instagramError = error.localizedDescription
-            instagramTokenStatus = "Token error: \(error.localizedDescription)"
+            let appError = AppError.fromError(error, context: "Loading Instagram posts")
+            instagramError = appError.message
+            instagramTokenStatus = "Error: \(appError.message)"
+            
+            // Log error but don't show alert for Instagram failures (non-critical)
+            errorHandler.handleError(error, context: "Instagram posts", showToUser: false)
         }
         
         isLoadingInstagram = false
     }
     
     func refreshData() async {
+        isLoading = true
         await loadSnowData()
         await loadInstagramPosts()
+        isLoading = false
     }
     
     func refreshInstagramToken() async {
         do {
             try await instagramService.manualRefreshToken()
             let status = instagramService.getTokenStatus()
-            instagramTokenStatus = "Token refreshed! Valid for \(status.daysUntilExpiration) days"
+            instagramTokenStatus = "Refreshed! Valid for \(status.daysUntilExpiration) days"
+            instagramError = nil
+            
         } catch {
-            instagramTokenStatus = "Token refresh failed: \(error.localizedDescription)"
+            let appError = AppError.fromError(error, context: "Refreshing Instagram token")
+            instagramTokenStatus = "Refresh failed: \(appError.message)"
+            instagramError = appError.message
+            
+            // Show error for token refresh since user explicitly requested it
+            errorHandler.handleError(error, context: "Instagram token refresh", showToUser: true)
         }
     }
-} 
+    
+    /// Retry Instagram loading with user feedback
+    func retryInstagram() async {
+        await loadInstagramPosts()
+    }
+}

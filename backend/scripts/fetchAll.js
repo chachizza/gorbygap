@@ -2,17 +2,15 @@
 
 /**
  * Gorby Backend - Fetch All Data Script
- * Runs both lift status and webcam scrapers in sequence
+ * Runs lift status API
  * Follows .cursorrules: No mock data, live data only
  */
 
-const LiftStatusScraper = require('./fetchLifts');
-const WebcamScraper = require('./fetchWebcams');
+const DirectLiftAPI = require('./fetchLiftsDirect');
 
 class DataFetcher {
     constructor() {
-        this.liftScraper = new LiftStatusScraper();
-        this.webcamScraper = new WebcamScraper();
+        this.liftAPI = new DirectLiftAPI();
     }
 
     log(message, level = 'info') {
@@ -22,32 +20,21 @@ class DataFetcher {
 
     async fetchAll() {
         try {
-            this.log('=== Starting Gorby Data Fetch (All Sources) ===');
+            this.log('=== Starting Gorby Data Fetch (Lift Status) ===');
             
             const results = {
                 lifts: null,
-                webcams: null,
                 errors: []
             };
 
             // Fetch lift status
             try {
                 this.log('Fetching lift status data...');
-                results.lifts = await this.liftScraper.run();
+                results.lifts = await this.liftAPI.run();
                 this.log(`Successfully fetched ${results.lifts.liftCount} lifts`);
             } catch (error) {
-                this.log(`Lift scraping failed: ${error.message}`, 'error');
+                this.log(`Lift API failed: ${error.message}`, 'error');
                 results.errors.push({ source: 'lifts', error: error.message });
-            }
-
-            // Fetch webcam data
-            try {
-                this.log('Fetching webcam data...');
-                results.webcams = await this.webcamScraper.run();
-                this.log(`Successfully fetched ${results.webcams.webcamCount} webcams`);
-            } catch (error) {
-                this.log(`Webcam scraping failed: ${error.message}`, 'error');
-                results.errors.push({ source: 'webcams', error: error.message });
             }
 
             this.log('=== Data fetch completed ===');

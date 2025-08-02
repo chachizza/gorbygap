@@ -11,6 +11,14 @@ import SwiftUI
 struct WeatherData: Identifiable, Codable {
     let id: UUID
     let temperature: Int
+    let feelsLike: Int
+    let condition: String
+    let iconName: String
+    let newSnow: Int
+    let baseTemp: Int
+    let windSpeed: Int
+    let humidity: Int
+    let visibility: String
     
     init(temperature: Int, feelsLike: Int, condition: String, iconName: String, newSnow: Int, baseTemp: Int, windSpeed: Int, humidity: Int, visibility: String) {
         self.id = UUID()
@@ -42,31 +50,27 @@ struct WeatherData: Identifiable, Codable {
         self.humidity = try container.decode(Int.self, forKey: .humidity)
         self.visibility = try container.decode(String.self, forKey: .visibility)
     }
-    let feelsLike: Int
-    let condition: String
-    let iconName: String
-    let newSnow: Int
-    let baseTemp: Int
-    let windSpeed: Int
-    let humidity: Int
-    let visibility: String
     
-    static let mock = WeatherData(
-        temperature: -8,
-        feelsLike: -12,
-        condition: "Light Snow",
-        iconName: "snow",
-        newSnow: 15,
-        baseTemp: -5,
-        windSpeed: 22,
-        humidity: 78,
-        visibility: "2 km"
-    )
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(temperature, forKey: .temperature)
+        try container.encode(feelsLike, forKey: .feelsLike)
+        try container.encode(condition, forKey: .condition)
+        try container.encode(iconName, forKey: .iconName)
+        try container.encode(newSnow, forKey: .newSnow)
+        try container.encode(baseTemp, forKey: .baseTemp)
+        try container.encode(windSpeed, forKey: .windSpeed)
+        try container.encode(humidity, forKey: .humidity)
+        try container.encode(visibility, forKey: .visibility)
+    }
 }
 
 struct CurrentConditions: Identifiable, Codable {
     let id: UUID
     let baseDepth: Int
+    let midDepth: Int
+    let alpineDepth: Int
+    let lastUpdated: String
     
     init(baseDepth: Int, midDepth: Int, alpineDepth: Int, lastUpdated: String) {
         self.id = UUID()
@@ -88,16 +92,14 @@ struct CurrentConditions: Identifiable, Codable {
         self.alpineDepth = try container.decode(Int.self, forKey: .alpineDepth)
         self.lastUpdated = try container.decode(String.self, forKey: .lastUpdated)
     }
-    let midDepth: Int
-    let alpineDepth: Int
-    let lastUpdated: String
     
-    static let mock = CurrentConditions(
-        baseDepth: 185,
-        midDepth: 220,
-        alpineDepth: 265,
-        lastUpdated: "2 hours ago"
-    )
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(baseDepth, forKey: .baseDepth)
+        try container.encode(midDepth, forKey: .midDepth)
+        try container.encode(alpineDepth, forKey: .alpineDepth)
+        try container.encode(lastUpdated, forKey: .lastUpdated)
+    }
 }
 
 struct DayForecast: Identifiable, Codable {
@@ -160,62 +162,20 @@ struct DayForecast: Identifiable, Codable {
         try container.encode(snowfall, forKey: .snowfall)
         try container.encode(precipitationChance, forKey: .precipitationChance)
     }
+}
+
+// MARK: - Date Formatters
+
+extension DateFormatter {
+    static let dayFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return formatter
+    }()
     
-    static var mockForecast: [DayForecast] {
-        let today = Date()
-        let calendar = Calendar.current
-        
-        return [
-            DayForecast(
-                dayOfWeek: "Today",
-                date: DateFormatter.dateFormatter.string(from: today),
-                condition: "Sunny",
-                iconName: "sun.max",
-                highTemp: 25,
-                lowTemp: 14,
-                snowfall: 0,
-                precipitationChance: 10
-            ),
-            DayForecast(
-                dayOfWeek: "Tomorrow",
-                date: DateFormatter.dateFormatter.string(from: calendar.date(byAdding: .day, value: 1, to: today) ?? today),
-                condition: "Partly Cloudy",
-                iconName: "cloud.sun",
-                highTemp: 23,
-                lowTemp: 13,
-                snowfall: 0,
-                precipitationChance: 20
-            ),
-            DayForecast(
-                dayOfWeek: DateFormatter.dayFormatter.string(from: calendar.date(byAdding: .day, value: 2, to: today) ?? today),
-                date: DateFormatter.dateFormatter.string(from: calendar.date(byAdding: .day, value: 2, to: today) ?? today),
-                condition: "Cloudy",
-                iconName: "cloud",
-                highTemp: 21,
-                lowTemp: 12,
-                snowfall: 0,
-                precipitationChance: 40
-            ),
-            DayForecast(
-                dayOfWeek: DateFormatter.dayFormatter.string(from: calendar.date(byAdding: .day, value: 3, to: today) ?? today),
-                date: DateFormatter.dateFormatter.string(from: calendar.date(byAdding: .day, value: 3, to: today) ?? today),
-                condition: "Light Rain",
-                iconName: "cloud.drizzle",
-                highTemp: 19,
-                lowTemp: 11,
-                snowfall: 0,
-                precipitationChance: 60
-            ),
-            DayForecast(
-                dayOfWeek: DateFormatter.dayFormatter.string(from: calendar.date(byAdding: .day, value: 4, to: today) ?? today),
-                date: DateFormatter.dateFormatter.string(from: calendar.date(byAdding: .day, value: 4, to: today) ?? today),
-                condition: "Sunny",
-                iconName: "sun.max",
-                highTemp: 22,
-                lowTemp: 13,
-                snowfall: 0,
-                precipitationChance: 0
-            )
-        ]
-    }
-} 
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+        return formatter
+    }()
+}

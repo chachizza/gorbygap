@@ -22,10 +22,12 @@ struct LiftData: Codable, Identifiable {
     let status: String
     let mountain: String
     let type: String
+    let waitTime: Int?
+    let capacity: Int
     let lastUpdated: String
     
     private enum CodingKeys: String, CodingKey {
-        case liftName, status, mountain, type, lastUpdated
+        case liftName, status, mountain, type, waitTime, capacity, lastUpdated
     }
     
     // Computed properties for UI
@@ -41,8 +43,8 @@ struct LiftData: Codable, Identifiable {
             return "red"
         case "scheduled":
             return "orange"
-        case "on hold":
-            return "yellow"
+        case "maintenance":
+            return "purple"
         default:
             return "gray"
         }
@@ -60,12 +62,53 @@ struct LiftData: Codable, Identifiable {
             return "L"
         }
     }
+    
+    var waitTimeText: String {
+        // Only show wait times for open lifts
+        guard isOpen else { return "N/A" }
+        
+        guard let waitTime = waitTime else { return "N/A" }
+        if waitTime == 0 {
+            return "No wait"
+        } else if waitTime < 5 {
+            return "< 5 min"
+        } else if waitTime < 10 {
+            return "5-10 min"
+        } else if waitTime < 15 {
+            return "10-15 min"
+        } else if waitTime < 30 {
+            return "15-30 min"
+        } else {
+            return "30+ min"
+        }
+    }
+    
+    var waitTimeColor: String {
+        // Only show wait time colors for open lifts
+        guard isOpen else { return "gray" }
+        
+        guard let waitTime = waitTime else { return "gray" }
+        if waitTime == 0 {
+            return "green"
+        } else if waitTime < 5 {
+            return "yellow"
+        } else if waitTime < 15 {
+            return "orange"
+        } else {
+            return "red"
+        }
+    }
+    
+    var capacityText: String {
+        if capacity == 0 {
+            return "N/A"
+        } else if capacity == 1 {
+            return "1 person"
+        } else {
+            return "\(capacity) people"
+        }
+    }
 }
 
-// MARK: - Mock Data for Previews
-extension LiftData {
-    static let mockLifts: [LiftData] = [
-        LiftData(liftName: "Peak Express", status: "Open", mountain: "Whistler", type: "Express Chair", lastUpdated: "2025-01-24T15:30:00Z"),
-        LiftData(liftName: "Blackcomb Gondola", status: "Open", mountain: "Blackcomb", type: "Gondola", lastUpdated: "2025-01-24T15:30:00Z")
-    ]
-} 
+// MARK: - Mock Data (REMOVED - No mock data allowed)
+// static let mockLifts: [LiftData] = [] 
